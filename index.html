@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f5f7">
+<title>デイサービス / Dịch vụ ban ngày</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--tx:#17191c;--mut:#6d7580;--line:#e6eaf0;--ac:#2f6f6a;--ac2:#e7f3f1;--bad:#b3402d;--warn:#fff6e4;--wt:#7a5410;--sh:0 10px 28px rgba(22,34,51,.06);--r:22px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Segoe UI",system-ui,sans-serif}
+main{max-width:880px;margin:0 auto;padding:22px 16px 128px}
+h1{font-size:26px;line-height:1.2;margin:0}
+h2{font-size:18px;margin:0 0 8px}
+h3{font-size:15px;margin:14px 0 6px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+input[type=text],input[type=date],input[type=time],input[type=tel],input[type=number],input[type=password],select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fbfcfd}
+textarea{min-height:88px;resize:vertical}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.date{color:var(--mut);margin:2px 0 14px}
+.vi,.kvi,.sub{color:var(--mut)}
+.bi{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25;gap:1px}
+.bi .jp{font-weight:700}
+.bi .vi{font-weight:500;color:var(--mut);font-size:.78em}
+.btn .bi .jp,.btn .bi .vi,.nav button .jp,.nav button .vi{color:inherit}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat{background:var(--card);border-radius:var(--r);padding:20px 18px 16px;box-shadow:var(--sh);min-height:132px}
+.stat .kjp{display:block;color:#66707c;font-size:14px}
+.stat .kvi{display:block;color:#9aa3ae;font-size:12px;margin-top:2px}
+.stat .num{font-size:40px;font-weight:700;letter-spacing:-.03em;margin-top:16px;line-height:1}
+.stat .num small{font-size:20px;margin-left:2px;font-weight:700}
+.stat .sub{margin-top:8px;font-size:13px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin:12px 0;box-shadow:var(--sh)}
+button.card{width:100%;text-align:left;border:0}
+.biggo{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:0;border-radius:var(--r);padding:16px 18px;margin-top:14px;box-shadow:var(--sh);color:inherit}
+.biggo .bubble{width:52px;height:52px;border-radius:16px;background:var(--ac2);color:var(--ac);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.biggo .jp{display:block;font-size:20px;font-weight:800}
+.biggo .vi{display:block;font-size:13px}
+.biggo .sub{display:block;font-size:12px;margin-top:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.btn{min-height:44px;border-radius:12px;padding:8px 14px;border:1px solid transparent;background:var(--ac);color:#fff;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.btn.o{background:#fff;color:#245e59;border-color:#d5e4e1}
+.btn.d{background:#fff;color:var(--bad);border-color:#f0c8c2}
+.btn:disabled{opacity:.4;cursor:default}
+.iconbtn{width:44px;height:44px;border-radius:14px;border:0;background:#fff;box-shadow:var(--sh);color:#243;display:flex;align-items:center;justify-content:center}
+.warn{background:var(--warn);color:var(--wt);border-radius:14px;padding:10px 12px;margin:10px 0;font-size:14px}
+.note{color:var(--mut);font-size:13px;margin:6px 0}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.tag{font-size:12px;border-radius:999px;padding:3px 8px;background:#f4f6f8;color:#445;white-space:nowrap}
+.tag.red{background:#fdecea;color:var(--bad)}
+.tag.amb{background:var(--warn);color:var(--wt)}
+.bd{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.days{display:flex;flex-wrap:wrap;gap:6px}
+.days label{margin:0;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);border-radius:12px;padding:6px 8px;min-width:44px;background:#fff;color:var(--tx);font-size:14px}
+.days .vi{font-size:10px}
+.row{display:grid;gap:6px;margin-bottom:8px;padding:10px;border:1px dashed var(--line);border-radius:12px;background:#fbfcfd}
+.link{background:none;border:0;color:var(--bad);padding:6px 0;justify-self:end}
+.mut{color:var(--mut);font-size:14px}
+.kv{margin:4px 0}
+.rh{margin-top:6px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac);padding-left:8px}
+.rn{white-space:pre-wrap;background:var(--warn);color:var(--wt);border-radius:10px;padding:8px 10px;margin-top:6px;font-size:14px}
+.ride{display:grid;grid-template-columns:92px 1fr;gap:10px}
+.ti{font-weight:800;color:var(--ac);text-align:center}
+.namelist{list-style:none;padding:0;margin:8px 0}
+.namelist li{padding:6px 0;border-bottom:1px solid #f0f2f5}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ch{text-align:center;color:var(--mut);font-size:12px}
+.cd{display:flex;flex-direction:column;align-items:center;padding:6px 0;border:0;border-radius:12px;background:#fff;box-shadow:var(--sh);min-height:52px;color:inherit}
+.cd.on{outline:2px solid var(--ac)}
+.cd span{font-size:11px;color:var(--ac)}
+.files{display:grid;gap:10px}
+.file{display:grid;grid-template-columns:72px 1fr;gap:8px 10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:14px}
+.thumb{width:72px;height:72px;object-fit:cover;border-radius:10px;background:#f3f5f7}
+.fileic{display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px}
+.file .bar{grid-column:1 / -1;margin:0}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.preview{position:sticky;top:8px;z-index:4;max-height:42vh;overflow:auto}
+.jptext{white-space:pre-wrap;font-size:16px;line-height:1.7}
+.vitext{white-space:pre-wrap;color:#3d4a44;background:#f4faf8;border-radius:12px;padding:10px;margin-top:8px;font-size:15px;line-height:1.65}
+details{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin:12px 0;padding:0 16px}
+summary{cursor:pointer;font-weight:700;padding:14px 0}
+details[open] summary{border-bottom:1px solid var(--line);margin-bottom:8px}
+details>div{padding-bottom:14px}
+label.lb{display:block;margin:10px 0 4px}
+.chk{display:flex;gap:8px;align-items:center;margin:8px 0}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;background:#fff;border-top:1px solid #eceff3;padding:4px 2px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(22,34,51,.04)}
+.nav button{flex:1;min-width:0;background:transparent;border:0;color:#8b919a;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 1px 2px;min-height:62px}
+.nav button .jp{font-size:10px;font-weight:700}
+.nav button .vi{font-size:8px;font-weight:600;line-height:1.15;max-width:100%;text-align:center}
+.nav button.on{color:#17191c}
+.nav svg,.bubble svg,.iconbtn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.modal{display:none;position:fixed;inset:0;z-index:40;background:rgba(20,24,28,.45);padding:18px;overflow:auto}
+.modal.show{display:flex;align-items:flex-start;justify-content:center}
+.modalcard{background:#fff;border-radius:18px;padding:14px;max-width:920px;width:100%;margin-top:20px}
+.modalcard img{max-width:100%;border-radius:12px}
+.modalcard iframe{width:100%;height:70vh;border:0;border-radius:12px;background:#f4f5f7}
+.empty{padding:6px 0}
+.center{text-align:center}
+.feegrid{display:grid;grid-template-columns:1fr auto;gap:4px 8px;font-size:14px}
+.tot{font-size:20px;font-weight:800;margin-top:8px}
+
+.sw{-webkit-appearance:none;appearance:none;display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:64px;margin:0;padding:14px 16px;border:0;border-radius:22px;background:#fff;box-shadow:var(--sh);text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.sw .track{width:56px;height:32px;border-radius:999px;background:#c5ced6;position:relative;flex:0 0 auto}
+.sw.on .track{background:var(--ac)}
+.sw .knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.28)}
+.sw.on .knob{left:27px}
+.card>.sw{box-shadow:none;background:#f3f6f8;margin:8px 0 0}
+.swDock{position:fixed;left:0;right:0;bottom:calc(76px + env(safe-area-inset-bottom));z-index:24;padding:0 12px}
+.swDock .sw{max-width:880px;margin:0 auto}
+.swSpace{height:84px}
+@media(max-width:380px){.stats{gap:8px}.stat{padding:14px 12px}.stat .num{font-size:32px}.ride{grid-template-columns:76px 1fr}}
+@media(min-width:900px){main{padding:32px 20px 128px}.stat .num{font-size:44px}}
+@media print{
+  .noprint,.nav,.modal{display:none!important}
+  body.nofee .fee{display:none!important}
+  body{background:#fff;color:#000}
+  main{max-width:none;padding:0}
+  .card,details,.stat{box-shadow:none;border:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+<div id="stw" class="warn noprint" style="display:none"></div>
+<main id="app"></main>
+<nav id="nav" class="nav noprint" aria-label="メインメニュー / Menu chính"></nav>
+<div id="modal" class="modal noprint" onclick="if(event.target.id==='modal')closeModal()">
+  <div class="modalcard" role="dialog" aria-modal="true">
+    <div class="bar"><button type="button" class="btn o" onclick="closeModal()"><span class="bi"><span class="jp">閉じる</span><span class="vi">Đóng</span></span></button></div>
+    <div id="modalbody"></div>
+  </div>
+</div>
+<script>
+var KEY="kaigo_v1", PK="kaigo_pin", MAX_FILE=4*1024*1024;
+var DAYS=["月","火","水","木","金","土","日"];
+var DOW_VI=["T2","T3","T4","T5","T6","T7","CN"];
+var DOW_VI_L=["thứ Hai","thứ Ba","thứ Tư","thứ Năm","thứ Sáu","thứ Bảy","Chủ nhật"];
+var _seq=0;
+var locked=false;
+var S={list:[],cur:null,q:"",del:false,tab:"home",rd:"",rv:"day",msg:"",cf:0,fileMsg:"",renUid:"",renDate:"",logDate:"",prev:"home",rc:0,lq:""};
+var REN={season:"",weather:"",holiday:"",appetite:"",temp:"",bp:"",pain:"",painWhere:"",sleep:"",mood:"",rec:"",recNote:"",bath:"",urine:"",stool:"",place:"",assist:"",meal:"",water:"",med:"",rehab:"",rehabNote:"",family:"",tomorrow:"",tomorrowNote:"",open:"",close:"",pat:0};
+var ORD={}, PLAN={};
+
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function bi(jp,vi){return '<span class="bi"><span class="jp">'+jp+'</span><span class="vi">'+vi+'</span></span>'}
+function cloudSched(){}
+function ds(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function pd(x){return new Date(String(x).slice(0,10)+"T00:00:00")}
+function wi(d){return (d.getDay()+6)%7}
+function fileTooBig(size){return (Number(size)||0) > MAX_FILE}
+function yen(n){return "¥"+new Intl.NumberFormat("ja-JP").format(Math.round(Number(n)||0))}
+function yenVi(n){return new Intl.NumberFormat("vi-VN").format(Math.round(Number(n)||0))+" yên"}
+function num(v){return Number(v)||0}
+function jpDate(iso){var d=pd(iso); if(isNaN(d.getTime())) return ""; return d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日（"+DAYS[wi(d)]+"）"}
+function viDate(iso){var d=pd(iso); if(isNaN(d.getTime())) return ""; return "ngày "+d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear()+" ("+DOW_VI_L[wi(d)]+")"}
+function age(b){
+  if(!b) return "";
+  var d=pd(b), n=new Date();
+  if(isNaN(d.getTime())) return "";
+  var a=n.getFullYear()-d.getFullYear();
+  if(n.getMonth()<d.getMonth() || (n.getMonth()===d.getMonth() && n.getDate()<d.getDate())) a--;
+  if(isNaN(a)||a<0||a>130) return "";
+  return a+"歳 / "+a+" tuổi";
+}
+function certDays(r){
+  if(!r || !r.certEnd) return null;
+  var a=pd(String(r.certEnd).slice(0,10)), b=pd(ds(new Date()));
+  if(isNaN(a.getTime())) return null;
+  return Math.round((a-b)/864e5);
+}
+function blank(){
+  _seq++;
+  return {id:Date.now()+_seq,name:"",kana:"",gender:"",birth:"",address:"",phone:"",level:"",copay:"",certEnd:"",cm:"",cmTel:"",illness:"",allergy:"",meds:[],caution:"",clothes:"",hobby:"",dislike:"",history:"",family:"",contacts:[],days:[],pick:"",ret:"",stay:"",transport:"",fee:"",feeMeal:"",feeNight:"",extras:[],note:"",stayDays:[],flags:[],blood:"",hospital:"",diet:"",walk:"",lang:"",logs:[],meals:"",nights:"",kasan:"",cond:"",map:"",keikaku:"",careFiles:[]};
+}
+function fix(){
+  var i,x,b,k,arr=["meds","contacts","days","extras","stayDays","flags","logs","careFiles"];
+  for(i=0;i<S.list.length;i++){
+    x=S.list[i]; if(!x || typeof x!=="object"){S.list[i]=blank(); x=S.list[i]}
+    b=blank();
+    for(k in b){ if(!(k in x)) x[k]=b[k]; }
+    if(!x.id) x.id=b.id;
+    arr.forEach(function(a){ if(!Array.isArray(x[a])) x[a]=[]; });
+    if(typeof x.keikaku!=="string") x.keikaku = x.keikaku ? String(x.keikaku) : "";
+  }
+}
+function warnSt(){
+  var e=$("stw");
+  if(!e) return;
+  e.style.display="block";
+  e.innerHTML='<b>この端末はページの保存を拒否しています。 / Máy này không cho trang lưu dữ liệu.</b><br>入力は閉じると消えます。Safariで開き、プライベートブラウズを切って、再読み込みしてください。設定からバックアップをコピーしてください。<br>Nội dung sẽ mất khi thoát. Hãy mở bằng Safari, tắt duyệt riêng tư, rồi tải lại. Vào Cài đặt và chép bản sao lưu.';
+}
+function stOK(){try{localStorage.setItem("kg_t","1"); var r=localStorage.getItem("kg_t")==="1"; localStorage.removeItem("kg_t"); return r}catch(e){return false}}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S.list)); return true; }
+  catch(e){ warnSt(); return false; }
+}
+function ordLoad(){try{var o=JSON.parse(localStorage.getItem("kaigo_ord")||"{}"); return o&&typeof o==="object"?o:{}}catch(e){return {}}}
+function ordSave(){try{localStorage.setItem("kaigo_ord", JSON.stringify(ORD))}catch(e){}}
+function plLoad(){try{var o=JSON.parse(localStorage.getItem("kaigo_plan")||"{}"); return o&&typeof o==="object"?o:{}}catch(e){return {}}}
+function plSave(){try{localStorage.setItem("kaigo_plan", JSON.stringify(PLAN))}catch(e){}}
+
+var SHOW_KEY="kaigo_shownames";
+var showNames=false;
+function loadShow(){ try{ showNames=localStorage.getItem(SHOW_KEY)==="1"; }catch(e){ showNames=false; } }
+function saveShow(){ try{ localStorage.setItem(SHOW_KEY, showNames?"1":"0"); }catch(e){} }
+function toggleNames(){ showNames=!showNames; saveShow(); render(); }
+function userNo(x){
+  var i, n;
+  if(!x) return 1;
+  n=+x.id;
+  for(i=0;i<S.list.length;i++) if(S.list[i] && (S.list[i].id===n || S.list[i].id===x.id)) return i+1;
+  return 1;
+}
+function dispName(x){
+  if(!x) return {jp:"?", vi:"?"};
+  if(showNames){
+    if(x.name) return {jp:x.name, vi:x.name};
+    return {jp:"名前なし", vi:"Chưa có tên"};
+  }
+  var no=userNo(x);
+  return {jp:"利用者 "+no, vi:"Người "+no};
+}
+function nameText(x){
+  var d=dispName(x);
+  if(showNames && x && x.name) return x.name;
+  return d.jp+" / "+d.vi;
+}
+function shownNote(text, x, lang){
+  if(text==null) return "";
+  var s=String(text);
+  if(showNames || !x || !x.name) return s;
+  var d=dispName(x);
+  return s.split(x.name).join(lang==="vi"?d.vi:d.jp);
+}
+function nameSwitch(){
+  return '<button type="button" class="sw'+(showNames?" on":"")+'" role="switch" aria-checked="'+(showNames?"true":"false")+'" onclick="toggleNames()"><span class="bi"><span class="jp">名前を表示</span><span class="vi">Hiện tên</span></span><span class="track" aria-hidden="true"><span class="knob"></span></span></button>';
+}
+
+function byId(id){
+  var n=+id, i;
+  for(i=0;i<S.list.length;i++){
+    if(S.list[i] && (S.list[i].id===n || S.list[i].id===id)) return S.list[i];
+  }
+  return null;
+}
+function cur(){return byId(S.cur)}
+function sorted(L, key){
+  var o=ORD[key]||[];
+  return L.slice().sort(function(a,b){
+    var i=o.indexOf(a.id), j=o.indexOf(b.id);
+    if(i>=0 && j>=0) return i-j;
+    if(i>=0) return -1;
+    if(j>=0) return 1;
+    var ta = key==="stay" || key==="stayDays" ? (a.kana||a.name||"") : (a[key]||"99");
+    var tb = key==="stay" || key==="stayDays" ? (b.kana||b.name||"") : (b[key]||"99");
+    return String(ta).localeCompare(String(tb), "ja");
+  });
+}
+function clean(list){
+  var seen={}, out=[], i, e;
+  for(i=0;i<(list||[]).length;i++){
+    e=list[i];
+    if(!e || !byId(e.id) || seen[+e.id]) continue;
+    seen[+e.id]=1;
+    out.push({id:+byId(e.id).id, t:e.t||""});
+  }
+  return out;
+}
+function baseList(D, arrKey, timeKey){
+  var w=DAYS[wi(pd(D))];
+  var L=S.list.filter(function(x){return x && (x[arrKey]||[]).indexOf(w)>=0});
+  L=sorted(L, timeKey||arrKey);
+  return L.map(function(x){
+    return {id:x.id, t: (timeKey && timeKey!=="stay") ? (x[timeKey]||"") : ""};
+  });
+}
+function touch(D){ if(!PLAN[D] || typeof PLAN[D]!=="object" || Array.isArray(PLAN[D])) PLAN[D]={}; return PLAN[D]; }
+function pickCustom(D){return !!(PLAN[D] && Array.isArray(PLAN[D].pick))}
+function stayCustom(D){return !!(PLAN[D] && Array.isArray(PLAN[D].stay))}
+function retCustom(D){return !!(PLAN[D] && Array.isArray(PLAN[D].ret))}
+function getPick(D){
+  if(pickCustom(D)) return clean(PLAN[D].pick);
+  return clean(baseList(D,"days","pick"));
+}
+function getStay(D){
+  if(stayCustom(D)) return clean(PLAN[D].stay);
+  return clean(baseList(D,"stayDays","stay"));
+}
+function getRet(D){
+  var pick=getPick(D), stay={}, people, order, time={}, idx={}, has={}, out;
+  getStay(D).forEach(function(e){stay[e.id]=1});
+  people=pick.filter(function(e){return !stay[e.id]});
+  order=(PLAN[D] && Array.isArray(PLAN[D].ret)) ? PLAN[D].ret : [];
+  order.forEach(function(e,i){
+    if(!e) return;
+    has[+e.id]=1; time[+e.id]=e.t||""; idx[+e.id]=i;
+  });
+  out=people.map(function(e,i){
+    var x=byId(e.id);
+    var t=(has[e.id] && time[e.id]) ? time[e.id] : ((x && x.ret) || "");
+    return {id:e.id, t:t, _i:i};
+  });
+  if(order.length){
+    out.sort(function(a,b){
+      var ia = Object.prototype.hasOwnProperty.call(idx, a.id) ? idx[a.id] : 10000+a._i;
+      var ib = Object.prototype.hasOwnProperty.call(idx, b.id) ? idx[b.id] : 10000+b._i;
+      return ia-ib;
+    });
+  }
+  return out.map(function(e){return {id:e.id, t:e.t}});
+}
+function ensurePick(D){
+  var P=touch(D);
+  if(!Array.isArray(P.pick)) P.pick=baseList(D,"days","pick").map(function(e){return {id:e.id, t:e.t||""}});
+  return P.pick;
+}
+function ensureStay(D){
+  var P=touch(D);
+  if(!Array.isArray(P.stay)) P.stay=baseList(D,"stayDays","stay").map(function(e){return {id:e.id, t:e.t||""}});
+  return P.stay;
+}
+function ensureRet(D){
+  var list=getRet(D).map(function(e){return {id:e.id, t:e.t||""}});
+  touch(D).ret=list;
+  return list;
+}
+function indexOfId(P,id){var i; for(i=0;i<P.length;i++) if(P[i] && +P[i].id===+id) return i; return -1}
+function listOf(key){
+  if(key==="stay") return ensureStay(S.rd);
+  if(key==="ret") return ensureRet(S.rd);
+  return ensurePick(S.rd);
+}
+function refreshKey(key){ if(key==="stay" || S.tab==="stay") stay(); else ride(); }
+function setTid(key,id,v){
+  var P=listOf(key), i=indexOfId(P,id);
+  if(i<0) return;
+  P[i].t=v;
+  plSave();
+}
+function mvId(key,id,dir){
+  var P=listOf(key), i=indexOfId(P,id), j=i+dir, t;
+  if(i<0 || j<0 || j>=P.length) return;
+  t=P[i]; P[i]=P[j]; P[j]=t;
+  plSave(); refreshKey(key);
+}
+function rmId(key,id){
+  var P=listOf(key), i=indexOfId(P,id);
+  if(i>=0) P.splice(i,1);
+  plSave(); refreshKey(key);
+}
+function adKey(key){
+  var el=$("add_"+key), v=el&&el.value, P, x;
+  if(!v) return;
+  P = key==="stay" ? ensureStay(S.rd) : ensurePick(S.rd);
+  if(indexOfId(P,v)>=0) return;
+  x=byId(v);
+  P.push({id:+v, t: key==="pick" && x ? (x.pick||"") : ""});
+  plSave(); refreshKey(key);
+}
+function sortKey(key){
+  var P=listOf(key);
+  P.sort(function(a,b){return String(a.t||"99").localeCompare(String(b.t||"99"))});
+  plSave(); refreshKey(key);
+}
+function resetDay(){
+  var P=PLAN[S.rd];
+  if(P){
+    delete P.pick; delete P.ret;
+    if(!Array.isArray(P.stay)) delete PLAN[S.rd];
+    plSave();
+  }
+  S.msg="この日の送迎を曜日の型に戻しました。\nĐã đưa đưa-đón của ngày này về lịch theo thứ.";
+  ride();
+}
+function resetStayDay(){
+  var P=PLAN[S.rd];
+  if(P){
+    delete P.stay;
+    if(!Array.isArray(P.pick) && !Array.isArray(P.ret)) delete PLAN[S.rd];
+    plSave();
+  }
+  S.msg="この日のお泊まりを曜日の型に戻しました。\nĐã đưa lịch trọ lại của ngày này về lịch theo thứ.";
+  stay();
+}
+function saveTpl(){
+  ORD.pick=getPick(S.rd).map(function(e){return e.id});
+  ORD.ret=getRet(S.rd).map(function(e){return e.id});
+  ordSave();
+  S.msg="この並びを、まだ個別に変えていない日の基本順として保存しました。\nĐã lưu thứ tự này làm mẫu cho các ngày chưa sửa riêng.";
+  ride();
+}
+function applyWk(){
+  if(!S.cf){ S.cf=1; ride(); return; }
+  S.cf=0;
+  var srcP=getPick(S.rd).map(function(e){return {id:e.id,t:e.t||""}});
+  var srcR=getRet(S.rd).map(function(e){return {id:e.id,t:e.t||""}});
+  var D=pd(S.rd), m=D.getMonth(), n=0, d, k;
+  for(d=new Date(D.getFullYear(), m, 1); d.getMonth()===m; d.setDate(d.getDate()+1)){
+    if(wi(d)!==wi(D)) continue;
+    k=ds(d);
+    if(k===S.rd) continue;
+    if(!PLAN[k]) PLAN[k]={};
+    PLAN[k].pick=JSON.parse(JSON.stringify(srcP));
+    PLAN[k].ret=JSON.parse(JSON.stringify(srcR));
+    n++;
+  }
+  plSave();
+  S.msg="今月の同じ曜日 "+n+" 日に送迎を写しました。お泊まりの個別設定は写していません。\nĐã chép đưa đón sang "+n+" ngày cùng thứ trong tháng. Không chép phần trọ lại đã sửa riêng.";
+  ride();
+}
+function goD(D,v){ if(!D) return; S.rd=D; if(v) S.rv=v; S.cf=0; if(S.tab==="stay") stay(); else ride(); }
+function shift(n){
+  var d=pd(S.rd);
+  if(S.rv==="month") d.setMonth(d.getMonth()+n);
+  else d.setDate(d.getDate()+(S.rv==="week"?7*n:n));
+  S.rd=ds(d); S.cf=0;
+  if(S.tab==="stay") stay(); else ride();
+}
+function setV(v){ S.rv=v; S.cf=0; if(S.tab==="stay") stay(); else ride(); }
+function extraSum(r, month){
+  var n=0,i,x,d;
+  var xs=r.extras||[];
+  for(i=0;i<xs.length;i++){
+    x=xs[i]||{};
+    d=x.d?String(x.d):"";
+    if(!d || d.slice(0,7)===month) n+=num(x.a);
+  }
+  return n;
+}
+function userMonthFee(r, month){
+  return num(r.fee)+num(r.kasan)+num(r.meals)*num(r.feeMeal)+num(r.nights)*num(r.feeNight)+extraSum(r, month);
+}
+function monthFees(month){
+  var i,s=0;
+  for(i=0;i<S.list.length;i++) s+=userMonthFee(S.list[i], month);
+  return s;
+}
+function total(r){
+  var ex=0,i;
+  for(i=0;i<(r.extras||[]).length;i++) ex+=num((r.extras[i]||{}).a);
+  var mn=num(r.meals)*num(r.feeMeal)+num(r.nights)*num(r.feeNight);
+  return {ex:ex, mn:mn, all:ex+mn+num(r.fee)+num(r.kasan)};
+}
+function countTodayLogs(day){
+  var n=0,i,j,logs;
+  for(i=0;i<S.list.length;i++){
+    logs=S.list[i].logs||[];
+    for(j=0;j<logs.length;j++) if(logs[j] && logs[j].d===day) n++;
+  }
+  return n;
+}
+function countStay(day){return getStay(day).length}
+function mapLink(r){
+  if(/^https?:\/\//i.test(r.map||"")) return r.map;
+  return r.address ? "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(r.address) : "";
+}
+function sum(r){
+  if(!r) return;
+  var t=total(r), m;
+  if($("tex")) $("tex").textContent=yen(t.ex);
+  if($("tmn")) $("tmn").textContent=yen(t.mn);
+  if($("tall")) $("tall").textContent=yen(t.all);
+  if($("age")) $("age").textContent=age(r.birth);
+  if($("tmonth")) $("tmonth").textContent=yen(userMonthFee(r, ds(new Date()).slice(0,7)));
+  m=$("mapbtn");
+  if(m){ var u=mapLink(r); m.href=u||"#"; m.style.display=u?"inline-flex":"none"; }
+}
+function ico(name){
+  var p={
+    home:'<path d="M4 11 12 4l8 7"/><path d="M6 10.5V20h12v-9.5"/>',
+    user:'<circle cx="12" cy="8" r="3"/><path d="M5.5 19c1.2-2.8 3.3-4.2 6.5-4.2s5.3 1.4 6.5 4.2"/>',
+    log:'<path d="M8 3.5h6l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-8.5A1.5 1.5 0 0 1 6.5 20V5A1.5 1.5 0 0 1 8 3.5z"/><path d="M14 3.5V8h4M9 12h6M9 16h4"/>',
+    mail:'<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    moon:'<path d="M16 3.2A8 8 0 1 0 20.8 15 6.5 6.5 0 0 1 16 3.2z"/>',
+    yen:'<path d="M6.5 5 12 12l5.5-7M7.5 12h9M7.5 15.5h9M12 12v7"/>',
+    car:'<path d="M3.5 15h17"/><path d="M5.5 15 7.2 9.5A2 2 0 0 1 9.1 8h5.8a2 2 0 0 1 1.9 1.5L18.5 15"/><circle cx="7.2" cy="17.2" r="1.4"/><circle cx="16.8" cy="17.2" r="1.4"/>',
+    gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18"/>'
+  };
+  return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(p[name]||"")+'</svg>';
+}
+function head(jp,vi,right){
+  return '<header class="top"><div><h1>'+esc(jp)+'</h1><div class="vi">'+esc(vi)+'</div></div>'+(right||"")+'</header>';
+}
+function gear(){return '<button type="button" class="iconbtn noprint" onclick="goTab(\'set\')" aria-label="設定 / Cài đặt">'+ico("gear")+'</button>'}
+function msgBox(){
+  if(!S.msg) return "";
+  var t=S.msg; S.msg="";
+  return '<div class="warn">'+esc(t).replace(/\n/g,"<br>")+'</div>';
+}
+function goTab(t){ S.tab=t; S.cur=null; S.del=false; S.cf=0; render(); try{scrollTo(0,0)}catch(e){} }
+function setNav(){
+  var n=$("nav"), items, h;
+  if(!n) return;
+  if(locked){ n.style.display="none"; n.innerHTML=""; return; }
+  n.style.display="flex";
+  items=[
+    ["home","home","ホーム","Trang chủ"],
+    ["users","user","利用者","Người dùng"],
+    ["logs","log","記録","Ghi chép"],
+    ["ren","mail","連絡帳","Sổ liên lạc"],
+    ["stay","moon","お泊まり","Trọ lại"],
+    ["fee","yen","費用","Chi phí"]
+  ];
+  h=items.map(function(it){
+    return '<button type="button" class="'+(S.tab===it[0]?"on":"")+'" onclick="goTab(\''+it[0]+'\')">'+ico(it[1])+'<span class="jp">'+it[2]+'</span><span class="vi">'+it[3]+'</span></button>';
+  }).join("");
+  n.innerHTML=h;
+}
+function stat(jp,vi,numHtml,sub){
+  return '<article class="stat"><span class="kjp">'+jp+'</span><span class="kvi">'+vi+'</span><div class="num">'+numHtml+'</div><div class="sub">'+sub+'</div></article>';
+}
+function flagVi(f){
+  var m={"転倒リスク":"Nguy cơ té","嚥下注意":"Chú ý nuốt","認知症":"Sa sút trí tuệ","車椅子":"Xe lăn","要見守り":"Cần trông","夜間頻尿":"Tiểu đêm nhiều"};
+  return m[f]||"";
+}
+function badges(r){
+  var b=[], c=certDays(r), i;
+  if(r.allergy) b.push('<span class="tag red">アレルギー / Dị ứng: '+esc(r.allergy)+'</span>');
+  for(i=0;i<(r.flags||[]).length;i++) b.push('<span class="tag red">'+esc(r.flags[i])+(flagVi(r.flags[i])?' / '+esc(flagVi(r.flags[i])):'')+'</span>');
+  if(c!==null && c<0) b.push('<span class="tag red">認定切れ / Hết hạn chứng nhận</span>');
+  else if(c!==null && c<=60) b.push('<span class="tag amb">認定あと'+c+'日 / Còn '+c+' ngày chứng nhận</span>');
+  return b.length ? '<div class="bd">'+b.join("")+'</div>' : "";
+}
+function nameLine(list){
+  if(!list.length) return '<div class="empty">'+bi("該当なし","Không có")+'</div>';
+  return '<ul class="namelist">'+list.map(function(e){
+    var x=byId(e.id);
+    var nm=x?nameText(x):"?";
+    var kana=showNames&&x&&x.kana?x.kana:"";
+    return '<li><b>'+esc(e.t||"—")+'</b> '+esc(nm)+' <span class="vi">'+esc(kana)+'</span></li>';
+  }).join("")+'</ul>';
+}
+function certWarns(){
+  var out=[], i, x, c, nm;
+  for(i=0;i<S.list.length;i++){
+    x=S.list[i]; c=certDays(x);
+    if(c===null || c>60) continue;
+    var dn=dispName(x);
+    nm=showNames?(x.name||"名前なし"):dn.jp;
+    var nv=showNames?(x.name||"Chưa có tên"):dn.vi;
+    if(c<0) out.push(esc(nm)+"：認定の期限が切れています / "+esc(nv)+": chứng nhận đã hết hạn");
+    else out.push(esc(nm)+"：認定まであと"+c+"日 / "+esc(nv)+": còn "+c+" ngày chứng nhận");
+  }
+  return out;
+}
+function home(){
+  var today=ds(new Date()), month=today.slice(0,7);
+  var nU=S.list.length, nL=countTodayLogs(today), nS=countStay(today), nF=monthFees(month);
+  var al=certWarns(), h="";
+  h+=head("デイサービス","Dịch vụ chăm sóc ban ngày", gear());
+  h+='<p class="date">'+esc(jpDate(today))+" / "+esc(viDate(today))+'</p>';
+  h+='<div class="swDock noprint">'+nameSwitch()+'</div>';
+  h+='<section class="stats">';
+  h+=stat("登録利用者","Người đăng ký", esc(nU)+'<small>名</small>', esc(nU)+" người");
+  h+=stat("今日の記録","Ghi chép hôm nay", esc(nL)+'<small>件</small>', esc(nL)+" bản ghi");
+  h+=stat("今夜のお泊まり","Trọ lại tối nay", esc(nS)+'<small>名</small>', esc(nS)+" người");
+  h+=stat("今月の実費","Chi phí tháng này", esc(yen(nF)), esc(yenVi(nF)));
+  h+='</section>';
+  h+='<button type="button" class="biggo noprint" onclick="goTab(\'ride\')"><span class="bubble">'+ico("car")+'</span><span><span class="jp">送迎</span><span class="vi">Đưa đón</span><span class="sub">今日の送迎表を開く / Mở bảng đưa đón hôm nay</span></span></button>';
+  h+='<div class="row2 noprint"><button type="button" class="btn o" onclick="goTab(\'ren\')">'+bi("連絡帳を書く","Viết sổ liên lạc")+'</button><button type="button" class="btn o" onclick="goTab(\'set\')">'+bi("設定・バックアップ","Cài đặt và sao lưu")+'</button></div>';
+  if(al.length) h+='<div class="warn"><b>認定の確認 / Kiểm tra chứng nhận</b><br>'+al.join("<br>")+'</div>';
+  h+='<div class="card"><h2>'+bi("今日のお迎え","Đón hôm nay")+'</h2>'+nameLine(getPick(today))+'<button type="button" class="btn o noprint" onclick="goTab(\'ride\')">'+bi("送迎を編集","Sửa đưa đón")+'</button></div>';
+  h+='<div class="card"><h2>'+bi("今夜のお泊まり","Trọ lại tối nay")+'</h2>'+nameLine(getStay(today))+'<button type="button" class="btn o noprint" onclick="goTab(\'stay\')">'+bi("お泊まりを編集","Sửa lịch trọ")+'</button></div>';
+  h+='<p class="note">名前を表示がオフのときは、一覧の名前を隠します。番号は登録の並びです。台帳を開いているときだけ、本名を見て編集できます。<br>Khi tắt Hiện tên, danh sách được ẩn tên. Số theo thứ tự đăng ký. Chỉ khi mở hồ sơ mới thấy và sửa tên thật.</p>';
+  h+='<p class="note">健康と個人の情報です。施設が許す範囲だけ入力してください。データはこのブラウザの中だけに保存されます。<br>Đây là thông tin sức khỏe và cá nhân. Chỉ nhập khi cơ sở cho phép. Dữ liệu chỉ lưu trong trình duyệt này.</p>';
+  h+='<div class="swSpace noprint"></div>';
+  $("app").innerHTML=h;
+}
+function users(){
+  var q=(S.q||"").toLowerCase(), L, h, i, x;
+  L=S.list.filter(function(x){return (x.name+" "+x.kana+" "+x.phone).toLowerCase().indexOf(q)>=0});
+  h=head("利用者","Người dùng", gear());
+  h+='<div class="bar noprint"><button type="button" class="btn" onclick="newR()">'+bi("利用者を追加","Thêm người dùng")+'</button></div>';
+  h+='<input id="q" type="text" placeholder="名前で検索 / Tìm theo tên" value="'+esc(S.q)+'">';
+  if(!S.list.length) h+='<div class="card empty">'+bi("まだ利用者がいません。上のボタンから追加してください。","Chưa có người dùng. Hãy thêm bằng nút phía trên.")+'</div>';
+  else if(!L.length) h+='<div class="card empty">'+bi("該当する人がいません。","Không thấy người phù hợp.")+'</div>';
+  for(i=0;i<L.length;i++){
+    x=L[i];
+    h+='<div class="card item" onclick="openR('+x.id+')"><div><b>'+esc(nameText(x))+'</b><div class="mut">'+(showNames?esc(x.kana||"")+" ":"")+esc(age(x.birth))+" · "+esc((x.days||[]).join(""))+(x.stayDays&&x.stayDays.length?" · お泊まり / Trọ lại":"")+'</div>'+badges(x)+((x.careFiles&&x.careFiles.length)?'<div class="mut">計画書の添付 '+x.careFiles.length+' / '+x.careFiles.length+' tệp kế hoạch</div>':'')+'</div><span class="tag">'+esc(x.level||"未入力 / Chưa nhập")+'</span></div>';
+  }
+  $("app").innerHTML=h;
+  var qel=$("q");
+  if(qel) qel.oninput=function(){ S.q=this.value; var p=this.selectionStart; users(); var n=$("q"); if(n){ n.focus(); try{n.setSelectionRange(p,p)}catch(e){} } };
+}
+function openR(id){ S.prev=S.tab; S.cur=id; S.del=false; S.tab="users"; render(); try{scrollTo(0,0)}catch(e){} }
+function backUser(){ var t=S.prev&&S.prev!=="users"?S.prev:"users"; S.cur=null; S.del=false; S.tab=t; render(); }
+function newR(){ var r=blank(); S.list.unshift(r); S.cur=r.id; S.prev="users"; S.tab="users"; S.del=false; save(); render(); try{scrollTo(0,0)}catch(e){} }
+function delR(){
+  if(!S.del){ S.del=true; detail(); return; }
+  S.list=S.list.filter(function(x){return x.id!==S.cur});
+  S.cur=null; S.del=false; save(); S.tab="users"; render();
+}
+function lab(jp,vi){return '<label class="lb">'+bi(jp,vi)+'</label>'}
+function inp(k,jp,vi,t,ph){
+  var r=cur();
+  return lab(jp,vi)+'<input type="'+(t||"text")+'" data-k="'+k+'" value="'+esc(r[k]==null?"":r[k])+'" placeholder="'+esc(ph|| (jp+" / "+vi))+'">';
+}
+function ta(k,jp,vi,ph){
+  var r=cur();
+  return lab(jp,vi)+'<textarea data-k="'+k+'" placeholder="'+esc(ph||"")+'">'+esc(r[k]==null?"":r[k])+'</textarea>';
+}
+function sel(k,jp,vi,opts){
+  var r=cur(), curV=r[k]==null?"":String(r[k]), have=false, all, i;
+  for(i=0;i<opts.length;i++) if(String(opts[i][0])===curV) have=true;
+  all=opts.slice();
+  if(!have) all.unshift([curV, curV||"—", "giá trị đã lưu"]);
+  return lab(jp,vi)+'<select data-k="'+k+'">'+all.map(function(o){
+    return '<option value="'+esc(o[0])+'"'+(String(o[0])===curV?" selected":"")+'>'+esc(o[1]+" / "+o[2])+'</option>';
+  }).join("")+'</select>';
+}
+function chk(arr, items){
+  var r=cur();
+  return '<div class="days">'+items.map(function(d){
+    var on=(r[arr]||[]).indexOf(d[0])>=0;
+    return '<label><input type="checkbox" data-arr="'+arr+'" data-v="'+esc(d[0])+'"'+(on?" checked":"")+'>'+esc(d[0])+'<span class="vi">'+esc(d[1])+'</span></label>';
+  }).join("")+'</div>';
+}
+function lst(l, cols, addJp, addVi){
+  var r=cur();
+  var h=(r[l]||[]).map(function(row,i){
+    return '<div class="row">'+cols.map(function(c){
+      var val=row[c[0]]==null?"":row[c[0]];
+      if(c[2]==="select"){
+        return lab(c[1], c[4]||"")+'<select data-l="'+l+'" data-i="'+i+'" data-k="'+c[0]+'">'+c[3].map(function(o){
+          var ov=o[0], ol=o[1], ovn=o[2]||"";
+          return '<option value="'+esc(ov)+'"'+(String(ov)===String(val)?" selected":"")+'>'+esc(ol+(ovn?" / "+ovn:""))+'</option>';
+        }).join("")+'</select>';
+      }
+      if(c[2]==="textarea") return '<textarea data-l="'+l+'" data-i="'+i+'" data-k="'+c[0]+'" placeholder="'+esc(c[1]+" / "+(c[4]||""))+'">'+esc(val)+'</textarea>';
+      if(c[2]==="checkbox") return '<label class="chk"><input type="checkbox" data-l="'+l+'" data-i="'+i+'" data-k="'+c[0]+'"'+(val?" checked":"")+'>'+bi(c[1], c[4]||"")+'</label>';
+      return '<input type="'+(c[2]||"text")+'" data-l="'+l+'" data-i="'+i+'" data-k="'+c[0]+'" value="'+esc(val)+'" placeholder="'+esc(c[1]+" / "+(c[4]||""))+'">';
+    }).join("")+'<button type="button" class="link noprint" onclick="delRow(\''+l+'\','+i+')">'+bi("この行を削除","Xóa dòng")+'</button></div>';
+  }).join("");
+  return h+'<button type="button" class="btn o noprint" onclick="addRow(\''+l+'\')">'+bi("＋ "+addJp,"＋ "+addVi)+'</button>';
+}
+function addRow(l){
+  var r=cur(); if(!r) return;
+  if(l==="logs") r.logs.unshift({d:ds(new Date()), k:"日中"});
+  else r[l].push({});
+  save(); detail();
+}
+function delRow(l,i){ var r=cur(); if(!r) return; r[l].splice(i,1); save(); detail(); }
+function isImg(f){return /^image\//.test(f.type||"") || /^data:image\//.test(f.data||"")}
+function careFilesHtml(r){
+  var h='<div class="files">', i, f;
+  for(i=0;i<(r.careFiles||[]).length;i++){
+    f=r.careFiles[i];
+    h+='<div class="file">';
+    if(isImg(f)) h+='<img class="thumb" alt="" src="'+String(f.data||"")+'">';
+    else h+='<div class="thumb fileic">'+bi("ファイル","Tệp")+'</div>';
+    h+='<div><b>'+esc(f.name||"file")+'</b><div class="mut">'+Math.max(1, Math.round((f.size||0)/1024))+' KB</div></div>';
+    h+='<div class="bar"><button type="button" class="btn o" onclick="viewCare('+i+')">'+bi("開く","Xem")+'</button><button type="button" class="btn d" onclick="rmCare('+i+')">'+bi("削除","Xóa")+'</button></div></div>';
+  }
+  if(!(r.careFiles||[]).length) h+='<div class="empty">'+bi("添付はまだありません","Chưa có tệp đính kèm")+'</div>';
+  h+='</div>';
+  h+='<div class="filebtn btn o noprint"><span>'+bi("写真・ファイルを追加","Thêm ảnh hoặc tệp")+'</span><input type="file" accept="image/*,application/pdf,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.heic,.csv,text/plain" multiple onchange="addCareFiles(this)" aria-label="添付を追加 / Thêm tệp"></div>';
+  h+='<p class="note">1件およそ4MBまで。超えるファイルは追加しません。写真も書類もこの利用者の記録の中に保存され、再読み込み後も残ります。<br>Mỗi tệp tối đa khoảng 4MB. Tệp lớn hơn sẽ bị bỏ. Ảnh và tài liệu nằm trong hồ sơ người này và còn sau khi tải lại.</p>';
+  if(S.fileMsg) h+='<div class="warn">'+esc(S.fileMsg).replace(/\n/g,"<br>")+'</div>';
+  return h;
+}
+function addCareFiles(input){
+  var uid=S.cur, r=byId(uid);
+  if(!r) return;
+  if(!Array.isArray(r.careFiles)) r.careFiles=[];
+  var files=[].slice.call(input.files||[]), skipped=[], queue=[], i;
+  input.value="";
+  for(i=0;i<files.length;i++){
+    if(fileTooBig(files[i].size)) skipped.push(files[i].name||"file");
+    else queue.push(files[i]);
+  }
+  var pending=queue.length, added=[];
+  function finish(){
+    if(!added.length){
+      S.fileMsg = skipped.length ? ("4MBを超えるため追加しませんでした: "+skipped.join(", ")+"\nTệp trên khoảng 4MB đã bỏ qua: "+skipped.join(", ")) : "";
+      if(S.cur===uid) detail();
+      return;
+    }
+    var snapshot=r.careFiles.slice();
+    added.forEach(function(it){ r.careFiles.push(it); });
+    if(!save()){
+      r.careFiles=snapshot;
+      S.fileMsg="容量がいっぱいです。ファイルを追加できませんでした。\nBộ nhớ trình duyệt đã đầy. Không thêm được tệp.";
+    } else if(skipped.length){
+      S.fileMsg="追加して保存しました。ただし4MB超はスキップ: "+skipped.join(", ")+"\nĐã thêm và lưu. Đã bỏ tệp trên khoảng 4MB: "+skipped.join(", ");
+    } else S.fileMsg="追加して保存しました。\nĐã thêm và lưu.";
+    if(S.cur===uid && S.tab==="users") detail();
+  }
+  if(!pending){ finish(); return; }
+  queue.forEach(function(f){
+    var rd=new FileReader();
+    rd.onload=function(){
+      added.push({name:f.name||"file", type:f.type||"", data:String(rd.result||""), size:f.size||0});
+      if(--pending===0) finish();
+    };
+    rd.onerror=function(){
+      skipped.push(f.name||"file");
+      if(--pending===0) finish();
+    };
+    rd.readAsDataURL(f);
+  });
+}
+function rmCare(i){
+  var r=cur(); if(!r||!r.careFiles||!r.careFiles[i]) return;
+  var snapshot=r.careFiles.slice();
+  r.careFiles.splice(i,1);
+  if(!save()){
+    r.careFiles=snapshot;
+    S.fileMsg="削除を保存できませんでした。\nKhông lưu được thao tác xóa.";
+  } else S.fileMsg="削除して保存しました。\nĐã xóa và lưu.";
+  detail();
+}
+function viewCare(i){
+  var r=cur(); if(!r||!r.careFiles||!r.careFiles[i]) return;
+  var f=r.careFiles[i], body=$("modalbody");
+  body.innerHTML="";
+  var cap=document.createElement("p");
+  cap.className="mut";
+  cap.textContent=(f.name||"file")+" · "+Math.max(1, Math.round((f.size||0)/1024))+" KB";
+  body.appendChild(cap);
+  if(isImg(f)){
+    var im=document.createElement("img");
+    im.alt=f.name||"";
+    im.src=f.data||"";
+    body.appendChild(im);
+  } else if(/pdf/i.test(f.type||"") || /\.pdf$/i.test(f.name||"")){
+    var fr=document.createElement("iframe");
+    fr.title="PDF";
+    fr.src=f.data||"";
+    body.appendChild(fr);
+  } else {
+    var p=document.createElement("p");
+    p.textContent="この種類は画面内でプレビューできません。下のボタンで保存して開いてください。\nLoại tệp này không xem trước được. Hãy lưu rồi mở bằng nút bên dưới.";
+    p.style.whiteSpace="pre-wrap";
+    body.appendChild(p);
+  }
+  var a=document.createElement("a");
+  a.className="btn";
+  a.href=f.data||"";
+  a.download=f.name||"file";
+  a.innerHTML=bi("保存して開く","Lưu và mở");
+  a.style.marginTop="10px";
+  body.appendChild(a);
+  $("modal").classList.add("show");
+}
+function closeModal(){ var m=$("modal"); if(m) m.classList.remove("show"); }
+function printR(nf){
+  var d=document.querySelectorAll("details"), i;
+  for(i=0;i<d.length;i++) d[i].open=true;
+  document.body.classList.toggle("nofee", !!nf);
+  window.print();
+  setTimeout(function(){ document.body.classList.remove("nofee"); }, 1500);
+}
+function detail(){
+  var r=cur(); if(!r){ users(); return; }
+  var LV=[["","未選択","Chưa chọn"],["非該当","非該当","Không thuộc"],["要支援1","要支援1","Hỗ trợ 1"],["要支援2","要支援2","Hỗ trợ 2"],["要介護1","要介護1","Cần chăm sóc 1"],["要介護2","要介護2","Cần chăm sóc 2"],["要介護3","要介護3","Cần chăm sóc 3"],["要介護4","要介護4","Cần chăm sóc 4"],["要介護5","要介護5","Cần chăm sóc 5"]];
+  var FL=[["転倒リスク","転倒リスク","Nguy cơ té"],["嚥下注意","嚥下注意","Chú ý nuốt"],["認知症","認知症","Sa sút trí tuệ"],["車椅子","車椅子","Xe lăn"],["要見守り","要見守り","Cần trông"],["夜間頻尿","夜間頻尿","Tiểu đêm nhiều"]];
+  var t=total(r), month=ds(new Date()).slice(0,7);
+  var h='<div class="bar noprint"><button type="button" class="btn o" onclick="backUser()">'+bi("戻る","Quay lại")+'</button><button type="button" class="btn o" onclick="printR(0)">'+bi("印刷 / PDF","In hoặc PDF")+'</button><button type="button" class="btn o" onclick="printR(1)">'+bi("金額なしで印刷","In không có tiền")+'</button><button type="button" class="btn o" onclick="goTab(\'ride\')">'+bi("送迎を開く","Mở đưa đón")+'</button></div>';
+  h+='<div class="card"><h2>'+esc(r.name||"名前なし")+'</h2><div class="vi">'+esc(r.kana||"Chưa có tên")+'</div><div id="age">'+esc(age(r.birth))+'</div>'+badges(r)+'</div>';
+  h+='<details open><summary>'+bi("1. 基本情報","1. Thông tin cơ bản")+'</summary><div>';
+  h+=inp("name","氏名","Họ tên")+inp("kana","ふりがな","Cách đọc");
+  h+='<div class="g2">'+sel("gender","性別","Giới tính",[["","未選択","Chưa chọn"],["男","男","Nam"],["女","女","Nữ"]])+inp("birth","生年月日","Ngày sinh","date")+'</div>';
+  h+=inp("address","住所","Địa chỉ nhà")+inp("map","Googleマップのリンク","Liên kết Google Maps","text","任意。家の位置のURL / Không bắt buộc. URL vị trí nhà");
+  h+='<div class="bar noprint"><a id="mapbtn" class="btn o" target="_blank" rel="noopener" href="'+esc(mapLink(r)||"#")+'">'+bi("地図を開く","Mở bản đồ")+'</a></div>';
+  h+=inp("phone","電話番号","Số điện thoại","tel")+'</div></details>';
+  h+='<details open><summary>'+bi("2. 介護保険","2. Bảo hiểm chăm sóc")+'</summary><div><div class="g2">'+sel("level","要介護度","Mức độ chăm sóc",LV)+sel("copay","負担割合","Tỷ lệ tự chi trả",[["","未選択","Chưa chọn"],["1割","1割","1 phần"],["2割","2割","2 phần"],["3割","3割","3 phần"]])+'</div>';
+  h+=inp("certEnd","認定の有効期限","Hạn chứng nhận","date")+'<div class="g2">'+inp("cm","ケアマネジャー","Nhân viên quản lý")+inp("cmTel","ケアマネの電話","Số điện thoại quản lý","tel")+'</div></div></details>';
+  h+='<details open><summary>'+bi("3. 健康","3. Sức khỏe")+'</summary><div>';
+  h+=ta("illness","既往歴・現病歴","Tiền sử và bệnh hiện tại")+ta("cond","最近の状態","Tình trạng gần đây","例: 食事が少ない、歩きが弱い / Ví dụ: ăn ít, đi lại yếu")+inp("allergy","アレルギー","Dị ứng");
+  h+=lab("服薬","Thuốc đang dùng")+lst("meds",[["n","薬の名前","text",null,"Tên thuốc"],["d","量","text",null,"Liều"],["t","飲む時間","text",null,"Giờ uống (sáng/trưa/tối)"]],"薬を追加","Thêm thuốc");
+  h+=ta("caution","ケアの注意","Lưu ý khi chăm sóc","例: 転びやすい、むせやすい / Ví dụ: dễ té, dễ sặc")+'</div></details>';
+  h+='<details open><summary>'+bi("4. 生活と好み","4. Sinh hoạt và sở thích")+'</summary><div>'+ta("clothes","衣服・着替え","Quần áo và cách thay")+ta("hobby","趣味・好きなこと","Sở thích")+ta("dislike","苦手なこと","Điều không thích")+'</div></details>';
+  h+='<details open><summary>'+bi("5. 追加情報","5. Thông tin thêm")+'</summary><div><div class="g2">'+inp("blood","血液型","Nhóm máu")+inp("hospital","かかりつけ医","Bác sĩ gia đình")+'</div><div class="g2">'+sel("diet","食事形態","Dạng thức ăn",[["","未選択","Chưa chọn"],["普通食","普通食","Cơm thường"],["きざみ食","きざみ食","Cơm thái nhỏ"],["ミキサー食","ミキサー食","Cơm xay"],["とろみ付き","とろみ付き","Có làm sánh"],["治療食","治療食","Ăn trị liệu"],["その他","その他","Khác"]])+sel("walk","移動","Đi lại",[["","未選択","Chưa chọn"],["自立","自立","Tự đi"],["杖","杖","Gậy"],["歩行器","歩行器","Khung tập đi"],["車椅子","車椅子","Xe lăn"],["介助","介助","Cần hỗ trợ"]])+'</div>';
+  h+=inp("lang","言語・宗教・大切にしたいこと","Ngôn ngữ, tôn giáo, điều cần tôn trọng");
+  h+=lab("注意の印（赤ラベル）","Dấu lưu ý (nhãn đỏ)")+'<div class="days">'+FL.map(function(d){
+    var on=(r.flags||[]).indexOf(d[0])>=0;
+    return '<label><input type="checkbox" data-arr="flags" data-v="'+esc(d[0])+'"'+(on?" checked":"")+'>'+esc(d[1])+'<span class="vi">'+esc(d[2])+'</span></label>';
+  }).join("")+'</div></div></details>';
+  h+='<details open><summary>'+bi("6. 送迎とお泊まりの曜日","6. Thứ đưa đón và trọ lại")+'</summary><div>';
+  h+='<p class="note">ここにチェックした曜日が基本の型です。ある一日だけ変えるときは、送迎またはお泊まりの画面でその日だけ編集します。曜日の型は変わりません。<br>Ô đã chọn là lịch mẫu theo thứ. Muốn đổi một ngày, hãy sửa đúng ngày đó ở màn đưa đón hoặc trọ lại. Lịch mẫu không đổi.</p>';
+  h+=lab("来る曜日","Thứ đến sử dụng")+chk("days", DAYS.map(function(d,i){return [d, DOW_VI[i]]}));
+  h+=lab("お泊まりの曜日","Thứ trọ lại thường xuyên")+chk("stayDays", DAYS.map(function(d,i){return [d, DOW_VI[i]]}));
+  h+='<div class="g2">'+inp("pick","お迎えの時刻","Giờ đón","time")+inp("ret","お送りの時刻","Giờ tiễn về","time")+'</div>';
+  h+=inp("stay","お泊まりのメモ","Ghi chú trọ lại","text","例: 常夜灯、眠前薬 / Ví dụ: đèn ngủ, thuốc trước khi ngủ");
+  h+=ta("transport","送迎メモ","Ghi chú đưa đón","例: 家の前、車いす / Ví dụ: trước nhà, có xe lăn");
+  h+='<div class="bar noprint"><button type="button" class="btn o" onclick="goTab(\'ride\')">'+bi("送迎表を開く","Mở bảng đưa đón")+'</button><button type="button" class="btn o" onclick="goTab(\'stay\')">'+bi("お泊まり表を開く","Mở bảng trọ lại")+'</button></div></div></details>';
+  h+='<details open><summary>'+bi("7. 連絡先","7. Liên lạc")+'</summary><div>'+lst("contacts",[["n","氏名","text",null,"Họ tên"],["rel","続柄","text",null,"Quan hệ"],["tel","電話","tel",null,"Số điện thoại"],["em","緊急連絡先","checkbox",null,"Liên hệ khẩn"]],"連絡先を追加","Thêm liên hệ")+'</div></details>';
+  h+='<details open><summary>'+bi("8. 生活歴と家族","8. Tiểu sử và gia đình")+'</summary><div>'+ta("history","生活歴","Tiểu sử")+ta("family","家族構成","Thành viên gia đình")+'</div></details>';
+  h+='<details class="fee" open><summary>'+bi("9. 利用料","9. Chi phí")+'</summary><div><div class="g2">'+inp("fee","月額の実費（円）","Phí tháng (yên)","number")+inp("kasan","加算（円/月）","Khoản cộng (yên/tháng)","number")+'</div><div class="g2">'+inp("feeMeal","食事の単価（円）","Đơn giá một bữa (yên)","number")+inp("meals","今月の食事回数","Số bữa trong tháng","number")+'</div><div class="g2">'+inp("feeNight","お泊まりの単価（円）","Đơn giá một đêm (yên)","number")+inp("nights","今月の泊数","Số đêm trong tháng","number")+'</div>';
+  h+=lab("追加の実費","Chi phí phát sinh")+lst("extras",[["d","日付","date",null,"Ngày"],["c","内容","text",null,"Nội dung"],["a","金額（円）","number",null,"Số tiền (yên)"]],"追加する","Thêm khoản");
+  h+='<div class="mut">食事と宿泊 / Ăn và trọ: <span id="tmn">'+yen(t.mn)+'</span> · 追加 / Phát sinh: <span id="tex">'+yen(t.ex)+'</span></div>';
+  h+='<div class="tot">入力どおりの合計 / Tổng các khoản đã nhập: <span id="tall">'+yen(t.all)+'</span></div>';
+  h+='<div class="tot">今月の実費 / Chi phí tháng này: <span id="tmonth">'+yen(userMonthFee(r,month))+'</span></div>';
+  h+='<p class="note">今月の実費は、月額＋加算＋食事回数×単価＋泊数×単価＋今月の追加（日付なしも含む）です。別の月の日付の追加は除きます。<br>Chi phí tháng này = phí tháng + khoản cộng + số bữa × đơn giá + số đêm × đơn giá + phụ phí tháng này (kể cả khoản không ghi ngày). Phụ phí ghi ngày thuộc tháng khác thì không tính.</p></div></details>';
+  h+='<details open><summary>'+bi("10. 計画書","10. Kế hoạch chăm sóc")+'</summary><div>';
+  h+=ta("keikaku","目標と支援内容","Mục tiêu và nội dung hỗ trợ","長期目標、短期目標、具体的な支援 / Mục tiêu dài hạn, ngắn hạn, hỗ trợ cụ thể");
+  h+=lab("添付（写真・書類）","Tệp đính kèm (ảnh, tài liệu)");
+  h+=careFilesHtml(r);
+  h+='</div></details>';
+  h+='<details open><summary>'+bi("11. メモ","11. Ghi chú")+'</summary><div>'+ta("note","自由メモ","Ghi chú tự do")+'</div></details>';
+  h+='<details open><summary>'+bi("12. 介護記録","12. Nhật ký chăm sóc")+'</summary><div>'+lst("logs",[
+    ["d","日付","date",null,"Ngày"],
+    ["k","区分","select",[["日中","日中","Ban ngày"],["お泊まり","お泊まり","Trọ lại"]],"Ca"],
+    ["bp","血圧","text",null,"Huyết áp"],
+    ["tp","体温","number",null,"Nhiệt độ"],
+    ["meal","食事","select",[["","未選択","Chưa chọn"],["全量","全量","Hết suất"],["半分","半分","Một nửa"],["少量","少量","Ít"],["拒否","拒否","Từ chối"]],"Bữa ăn"],
+    ["toi","排泄","text",null,"Bài tiết"],
+    ["bath","入浴","select",[["","未選択","Chưa chọn"],["なし","なし","Không"],["入浴","入浴","Tắm"],["清拭","清拭","Lau người"],["足浴","足浴","Ngâm chân"]],"Tắm"],
+    ["mood","様子","select",[["","未選択","Chưa chọn"],["良好","良好","Tốt"],["普通","普通","Bình thường"],["不穏","不穏","Bứt rứt"],["傾眠","傾眠","Ngủ gà"]],"Tình trạng"],
+    ["inc","事故・ヒヤリ","text",null,"Sự cố"],
+    ["bed","就寝","time",null,"Giờ ngủ"],
+    ["nt","夜間の様子","textarea",null,"Tình hình ban đêm"],
+    ["note","メモ","textarea",null,"Ghi chú"]
+  ],"今日の記録を追加","Thêm ghi chép")+'</div></details>';
+  h+='<div class="bar noprint"><button type="button" class="btn d" onclick="delR()">'+bi(S.del?"もう一度押すと削除します":"この利用者を削除", S.del?"Bấm lần nữa để xóa":"Xóa người dùng này")+'</button></div>';
+  $("app").innerHTML=h;
+  sum(r);
+}
+
+function dateBar(){
+  var v=S.rv;
+  function b(k,jp,vi){return '<button type="button" class="btn'+(v===k?"":" o")+'" onclick="setV(\''+k+'\')">'+bi(jp,vi)+'</button>'}
+  return '<div class="bar noprint">'+b("day","日","Ngày")+b("week","週","Tuần")+b("month","月","Tháng")+'</div><div class="bar noprint"><button type="button" class="btn o" onclick="shift(-1)" aria-label="前へ / Trước">◀</button><input type="date" value="'+esc(S.rd)+'" onchange="goD(this.value, S.rv)" aria-label="日付 / Ngày"><button type="button" class="btn o" onclick="shift(1)" aria-label="次へ / Sau">▶</button><button type="button" class="btn o" onclick="goD(ds(new Date()), S.rv)">'+bi("今日","Hôm nay")+'</button></div>';
+}
+function weekV(kind){
+  var d=pd(S.rd); d.setDate(d.getDate()-wi(d));
+  var h='<p class="note">'+bi("その週の一覧です。日を押すと、その日だけ編集できます。","Danh sách trong tuần. Bấm một ngày để sửa riêng ngày đó.")+'</p>', i, k, L, names, custom;
+  for(i=0;i<7;i++){
+    k=ds(d);
+    L=kind==="stay"?getStay(k):getPick(k);
+    names=L.map(function(e){var x=byId(e.id); return x?nameText(x):"";}).filter(Boolean);
+    custom=kind==="stay"?stayCustom(k):(pickCustom(k)||retCustom(k));
+    h+='<button type="button" class="card item" onclick="goD(\''+k+'\',\'day\')"><div><b>'+DAYS[i]+" "+d.getDate()+"/"+(d.getMonth()+1)+(k===ds(new Date())?" · 今日 / Hôm nay":"")+(custom?" · 個別 / Đã sửa":"")+'</b><div class="mut">'+(names.length?esc(names.join(" → ")):"該当なし / Không có")+'</div></div><span class="tag">'+L.length+'</span></button>';
+    d.setDate(d.getDate()+1);
+  }
+  return h;
+}
+function monthV(kind){
+  var d=pd(S.rd), m=d.getMonth(), f=new Date(d.getFullYear(), m, 1), h, i, c, k, n, custom;
+  h='<div class="center"><b>'+(m+1)+" / "+d.getFullYear()+'</b><div class="vi">Tháng '+(m+1)+"/"+d.getFullYear()+'</div></div><div class="cal">';
+  for(i=0;i<7;i++) h+='<div class="ch">'+DAYS[i]+'<br><span>'+DOW_VI[i]+'</span></div>';
+  for(i=0;i<wi(f);i++) h+="<div></div>";
+  for(c=new Date(f); c.getMonth()===m; c.setDate(c.getDate()+1)){
+    k=ds(c);
+    n=kind==="stay"?countStay(k):getPick(k).length;
+    custom=kind==="stay"?stayCustom(k):(pickCustom(k)||retCustom(k));
+    h+='<button type="button" class="cd'+(k===S.rd?" on":"")+'" onclick="goD(\''+k+'\',\'day\')"><b>'+c.getDate()+'</b><span>'+(n||"")+(custom?"•":"")+'</span></button>';
+  }
+  return h+'</div><p class="note">'+bi("数字は人数、点は個別に変えた日です。","Số là số người, dấu chấm là ngày đã sửa riêng.")+'</p>';
+}
+function personCard(e, key, idx, totalN, stayIds){
+  var x=byId(e.id); if(!x) return "";
+  var em=(x.contacts||[]).filter(function(c){return c && c.em && c.tel})[0];
+  var ml=mapLink(x);
+  var h='<div class="card ride"><div><div class="mut">#'+(idx+1)+'</div><input type="time" class="ti" value="'+esc(e.t||"")+'" onchange="setTid(\''+key+'\','+x.id+',this.value)" aria-label="時刻 / Giờ"></div><div>';
+  h+='<div><b>'+esc(nameText(x))+'</b>'+(showNames&&x.kana?' <span class="mut">'+esc(x.kana)+'</span>':'')+'</div>';
+  if(stayIds && stayIds[x.id] && key==="pick") h+='<div class="tag amb" style="margin-top:6px">この日はお泊まり（お送りなし） / Hôm nay trọ lại (không tiễn về)</div>';
+  h+='<div class="kv"><span class="mut">住所 / Địa chỉ</span><div>'+(x.address?esc(x.address):'<span class="mut">未入力 / Chưa có</span>')+'</div></div>';
+  if(x.phone) h+='<div class="mut">電話 / Điện thoại: <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div>';
+  h+=badges(x);
+  if(x.illness) h+='<div class="rh">既往 / Tiền sử: '+esc(x.illness)+'</div>';
+  if(x.cond) h+='<div class="rh">最近の状態 / Tình trạng gần đây: '+esc(x.cond)+'</div>';
+  var ms=(x.meds||[]).map(function(mm){return [mm.n,mm.d,mm.t].filter(Boolean).join(" ")}).filter(Boolean).join("、");
+  if(ms) h+='<div class="rh">薬 / Thuốc: '+esc(ms)+'</div>';
+  var notes=[];
+  if(x.transport) notes.push("送迎メモ / Ghi chú đưa đón: "+x.transport);
+  if(x.caution) notes.push("注意 / Lưu ý: "+x.caution);
+  if(x.walk) notes.push("移動 / Đi lại: "+x.walk);
+  if(key==="stay" && x.stay) notes.push("お泊まりメモ / Ghi chú trọ: "+x.stay);
+  if(notes.length) h+='<div class="rn">'+esc(notes.join("\n"))+'</div>';
+  h+='<div class="bar noprint"><button type="button" class="btn o" onclick="mvId(\''+key+'\','+x.id+',-1)"'+(idx===0?" disabled":"")+'>'+bi("上へ","Lên")+'</button>';
+  h+='<button type="button" class="btn o" onclick="mvId(\''+key+'\','+x.id+',1)"'+(idx===totalN-1?" disabled":"")+'>'+bi("下へ","Xuống")+'</button>';
+  if(ml) h+='<a class="btn" target="_blank" rel="noopener" href="'+esc(ml)+'">'+bi("地図","Bản đồ")+'</a>';
+  if(x.phone) h+='<a class="btn o" href="tel:'+esc(x.phone)+'">'+bi("家に電話","Gọi nhà")+'</a>';
+  if(em) h+='<a class="btn o" href="tel:'+esc(em.tel)+'">'+bi("緊急に電話","Gọi khẩn")+'</a>';
+  h+='<button type="button" class="btn o" onclick="openR('+x.id+')">'+bi("台帳","Hồ sơ")+'</button>';
+  if(key!=="ret") h+='<button type="button" class="btn d" onclick="rmId(\''+key+'\','+x.id+')">'+bi(key==="stay"?"この日は休泊":"この日は休み","Bỏ khỏi ngày này")+'</button>';
+  h+='</div></div></div>';
+  return h;
+}
+function addBox(key, P){
+  var used={}, rest;
+  P.forEach(function(e){used[e.id]=1});
+  rest=S.list.filter(function(x){return !used[x.id]});
+  if(!rest.length) return '<p class="note">'+bi("追加できる人はいません。","Không còn người để thêm.")+'</p>';
+  return '<div class="bar noprint"><select id="add_'+key+'"><option value="">人を選ぶ / Chọn người</option>'+rest.map(function(x){return '<option value="'+x.id+'">'+esc(nameText(x))+'</option>'}).join("")+'</select><button type="button" class="btn" onclick="adKey(\''+key+'\')">'+bi("臨時で追加","Thêm đột xuất")+'</button></div>';
+}
+function rideBlock(jp,vi,key){
+  var P=key==="ret"?getRet(S.rd):getPick(S.rd);
+  var stayIds={}, i, h;
+  getStay(S.rd).forEach(function(e){stayIds[e.id]=1});
+  h='<div class="bar"><h2>'+bi(jp,vi)+'</h2><span class="tag">'+P.length+'名 / '+P.length+' người</span>';
+  if(P.length>1) h+='<button type="button" class="btn o noprint" onclick="sortKey(\''+key+'\')">'+bi("時刻で並べる","Xếp theo giờ")+'</button>';
+  h+='</div>';
+  if(key==="ret") h+='<p class="note">お泊まりの人はここには出ません。人の追加と休みはお迎えで変えます。時刻と順番だけ、この日のお送り用に変えられます。<br>Người trọ lại không hiện ở đây. Thêm hoặc cho nghỉ ở phần đón. Chỉ giờ và thứ tự tiễn về là sửa cho riêng ngày này.</p>';
+  if(!P.length) h+='<div class="card empty">'+bi("この日は誰もいません。","Ngày này không có ai.")+'</div>';
+  for(i=0;i<P.length;i++) h+=personCard(P[i], key, i, P.length, stayIds);
+  if(key!=="ret") h+=addBox(key, getPick(S.rd));
+  return h;
+}
+function ride(){
+  if(!S.rd) S.rd=ds(new Date());
+  var d=pd(S.rd), custom=pickCustom(S.rd)||retCustom(S.rd), h;
+  h=head("送迎","Đưa đón", gear());
+  h+='<div class="bar noprint"><button type="button" class="btn o" onclick="goTab(\'home\')">'+bi("ホームへ","Về trang chủ")+'</button><button type="button" class="btn o" onclick="printR(0)">'+bi("印刷","In")+'</button></div>';
+  h+=dateBar()+msgBox();
+  if(S.rv==="week") h+=weekV("pick");
+  else if(S.rv==="month") h+=monthV("pick");
+  else {
+    h+='<p class="note"><b>'+esc(DAYS[wi(d)]+" "+jpDate(S.rd))+" / "+esc(viDate(S.rd))+'</b><br>'+(custom?"この日は個別の変更があります。 / Ngày này có chỉnh riêng.":"曜日の型から自動です。 / Đang theo lịch mẫu của thứ.")+'<br>お迎えの追加・休み・時刻・順番は、この日だけ保存されます。お送りはお迎えと同じ人で、この日お泊まりの人は除きます。<br>Thêm, cho nghỉ, đổi giờ và thứ tự ở phần đón chỉ lưu cho ngày này. Danh sách tiễn về gồm đúng người được đón, trừ người trọ lại ngày này.</p>';
+    h+=rideBlock("お迎え","Đón","pick");
+    h+=rideBlock("お送り","Tiễn về","ret");
+    h+='<div class="card noprint"><h2>'+bi("この日の操作","Thao tác cho ngày này")+'</h2><div class="bar">';
+    h+='<button type="button" class="btn o" onclick="resetDay()">'+bi("この日の送迎を曜日の型に戻す","Đưa đưa-đón của ngày này về lịch theo thứ")+'</button>';
+    h+='<button type="button" class="btn o" onclick="saveTpl()">'+bi("この並びを基本順にする","Lưu thứ tự này làm mẫu")+'</button>';
+    h+='<button type="button" class="btn o" onclick="applyWk()">'+bi(S.cf?"もう一度押すと写します":"今月の同じ曜日に送迎を写す", S.cf?"Bấm lần nữa để chép":"Chép sang cùng thứ trong tháng")+'</button>';
+    h+='</div><p class="note">「曜日の型に戻す」は、この日の送迎の変更だけ消します。各利用者の曜日チェックと、お泊まりの個別変更は残します。<br>Nút đưa về lịch theo thứ chỉ xóa phần đưa đón đã sửa của ngày này. Ô thứ của từng người và phần trọ lại đã sửa riêng vẫn giữ.</p></div>';
+  }
+  $("app").innerHTML=h;
+}
+function stay(){
+  if(!S.rd) S.rd=ds(new Date());
+  var custom=stayCustom(S.rd), P, h, i;
+  h=head("お泊まり","Trọ lại", gear());
+  h+='<div class="bar noprint"><button type="button" class="btn o" onclick="goTab(\'home\')">'+bi("ホームへ","Về trang chủ")+'</button><button type="button" class="btn o" onclick="printR(0)">'+bi("印刷","In")+'</button></div>';
+  h+=dateBar()+msgBox();
+  if(S.rv==="week"){ $("app").innerHTML=h+weekV("stay"); return; }
+  if(S.rv==="month"){ $("app").innerHTML=h+monthV("stay"); return; }
+  P=getStay(S.rd);
+  h+='<p class="note"><b>'+esc(jpDate(S.rd))+" / "+esc(viDate(S.rd))+'</b><br>'+(custom?"この日は個別の変更があります。 / Ngày này có chỉnh riêng.":"お泊まりの曜日チェックから自動です。 / Tự động theo ô thứ trọ lại.")+'<br>休泊・臨時泊・時刻・順番は、この日だけ保存されます。この名簿にいる人は、同じ日のお送りから外れます。<br>Nghỉ đêm, trọ thêm, giờ và thứ tự chỉ lưu cho ngày này. Người trong danh sách này không có ở danh sách tiễn về cùng ngày.</p>';
+  h+='<div class="bar"><h2>'+bi("この日の名簿","Danh sách ngày này")+'</h2><span class="tag">'+P.length+'名 / '+P.length+' người</span>';
+  if(P.length>1) h+='<button type="button" class="btn o noprint" onclick="sortKey(\'stay\')">'+bi("時刻で並べる","Xếp theo giờ")+'</button>';
+  h+='</div>';
+  if(!P.length) h+='<div class="card empty">'+bi("この日のお泊まりはありません。","Ngày này không có người trọ lại.")+'</div>';
+  for(i=0;i<P.length;i++) h+=personCard(P[i], "stay", i, P.length, {});
+  h+=addBox("stay", P);
+  h+='<div class="card noprint"><button type="button" class="btn o" onclick="resetStayDay()">'+bi("この日をお泊まり曜日の型に戻す","Đưa ngày này về lịch trọ theo thứ")+'</button><p class="note">基本の曜日チェックは変えません。この日の個別変更だけ消します。<br>Không đổi ô thứ đã chọn. Chỉ xóa phần sửa riêng của ngày này.</p></div>';
+  $("app").innerHTML=h;
+}
+function lfield(uid, idx, key, jp, vi, type, val){
+  return lab(jp,vi)+'<input type="'+(type||"text")+'" data-log="'+key+'" data-uid="'+uid+'" data-i="'+idx+'" value="'+esc(val==null?"":val)+'" placeholder="'+esc(jp+" / "+vi)+'">';
+}
+function lsel(uid, idx, key, jp, vi, opts, val){
+  return lab(jp,vi)+'<select data-log="'+key+'" data-uid="'+uid+'" data-i="'+idx+'">'+opts.map(function(o){
+    return '<option value="'+esc(o[0])+'"'+(String(o[0])===String(val==null?"":val)?" selected":"")+'>'+esc(o[1]+" / "+o[2])+'</option>';
+  }).join("")+'</select>';
+}
+function lta(uid, idx, key, jp, vi, val){
+  return lab(jp,vi)+'<textarea data-log="'+key+'" data-uid="'+uid+'" data-i="'+idx+'" placeholder="'+esc(jp+" / "+vi)+'">'+esc(val==null?"":val)+'</textarea>';
+}
+function logEditor(x, g, idx){
+  var h='<div class="row">';
+  h+=lsel(x.id, idx, "k", "区分", "Ca", [["日中","日中","Ban ngày"],["お泊まり","お泊まり","Trọ lại"]], g.k||"日中");
+  h+='<div class="g2">'+lfield(x.id, idx, "bp", "血圧", "Huyết áp", "text", g.bp)+lfield(x.id, idx, "tp", "体温", "Nhiệt độ", "number", g.tp)+'</div>';
+  h+=lsel(x.id, idx, "meal", "食事", "Bữa ăn", [["","未選択","Chưa chọn"],["全量","全量","Hết suất"],["半分","半分","Một nửa"],["少量","少量","Ít"],["拒否","拒否","Từ chối"]], g.meal);
+  h+=lfield(x.id, idx, "toi", "排泄", "Bài tiết", "text", g.toi);
+  h+=lsel(x.id, idx, "bath", "入浴", "Tắm", [["","未選択","Chưa chọn"],["なし","なし","Không"],["入浴","入浴","Tắm"],["清拭","清拭","Lau người"],["足浴","足浴","Ngâm chân"]], g.bath);
+  h+=lsel(x.id, idx, "mood", "様子", "Tình trạng", [["","未選択","Chưa chọn"],["良好","良好","Tốt"],["普通","普通","Bình thường"],["不穏","不穏","Bứt rứt"],["傾眠","傾眠","Ngủ gà"]], g.mood);
+  h+=lfield(x.id, idx, "inc", "事故・ヒヤリ", "Sự cố", "text", g.inc);
+  h+=lfield(x.id, idx, "bed", "就寝", "Giờ ngủ", "time", g.bed);
+  h+=lta(x.id, idx, "nt", "夜間の様子", "Tình hình ban đêm", g.nt);
+  h+=lta(x.id, idx, "note", "メモ", "Ghi chú", g.note);
+  if(g.renraku){
+    h+='<h3>'+bi("保存した連絡帳","Sổ liên lạc đã lưu")+'</h3><div class="jptext">'+esc(shownNote(g.renraku, x, "jp"))+'</div>';
+    if(g.renrakuVi) h+='<div class="vitext">'+esc(shownNote(g.renrakuVi, x, "vi"))+'</div>';
+  }
+  h+='<button type="button" class="link" onclick="delLog('+x.id+','+idx+')">'+bi("この記録を削除","Xóa ghi chép này")+'</button></div>';
+  return h;
+}
+function addLog(uid, day){
+  var x=byId(uid); if(!x) return;
+  if(!Array.isArray(x.logs)) x.logs=[];
+  x.logs.unshift({d:day||ds(new Date()), k:"日中"});
+  save(); logs();
+}
+function delLog(uid, idx){
+  var x=byId(uid); if(!x||!x.logs) return;
+  x.logs.splice(idx,1); save(); logs();
+}
+function logs(){
+  if(!S.logDate) S.logDate=ds(new Date());
+  var day=S.logDate, q=(S.lq||"").toLowerCase(), h="", i, x, found, j, bag, shown=0;
+  h+=head("記録","Ghi chép", gear());
+  h+=lab("日付","Ngày")+'<input type="date" value="'+esc(day)+'" onchange="S.logDate=this.value;logs()" aria-label="日付 / Ngày">';
+  h+='<input id="lq" type="text" placeholder="名前で絞る / Lọc theo tên" value="'+esc(S.lq)+'">';
+  h+='<p class="note">選んだ日の介護記録です。連絡帳の文章は「連絡帳」で作り、保存するとこの日の記録に残ります。今日の件数は、日付が今日の記録の数です。<br>Đây là ghi chép chăm sóc của ngày đã chọn. Đoạn sổ liên lạc viết ở mục Sổ liên lạc; khi lưu sẽ nằm trong ghi chép ngày đó. Số của hôm nay là số bản ghi có ngày hôm nay.</p>';
+  if(!S.list.length) h+='<div class="card empty">'+bi("先に利用者を登録してください。","Hãy đăng ký người dùng trước.")+'</div>';
+  for(i=0;i<S.list.length;i++){
+    x=S.list[i];
+    if(q && (x.name+" "+x.kana).toLowerCase().indexOf(q)<0) continue;
+    shown++;
+    bag=[];
+    for(j=0;j<(x.logs||[]).length;j++) if(x.logs[j] && x.logs[j].d===day) bag.push(j);
+    h+='<div class="card"><div class="item"><div><b>'+esc(nameText(x))+'</b>'+(showNames&&x.kana?'<div class="mut">'+esc(x.kana)+'</div>':'')+'</div><button type="button" class="btn o" onclick="addLog('+x.id+',\''+esc(day)+'\')">'+bi("記録を追加","Thêm ghi chép")+'</button></div>';
+    if(!bag.length) h+='<div class="empty">'+bi("この日の記録はまだありません。","Chưa có ghi chép ngày này.")+'</div>';
+    for(j=0;j<bag.length;j++) h+=logEditor(x, x.logs[bag[j]], bag[j]);
+    h+='<button type="button" class="btn o noprint" onclick="openRen('+x.id+',\''+esc(day)+'\')">'+bi("この人の連絡帳","Sổ liên lạc của người này")+'</button></div>';
+  }
+  if(S.list.length && !shown) h+='<div class="card empty">'+bi("該当する人がいません。","Không thấy người phù hợp.")+'</div>';
+  $("app").innerHTML=h;
+  var el=$("lq");
+  if(el) el.oninput=function(){ S.lq=this.value; var p=this.selectionStart; logs(); var n=$("lq"); if(n){ n.focus(); try{n.setSelectionRange(p,p)}catch(e){} } };
+}
+function feeIn(x,k,jp,vi){return lab(jp,vi)+'<input type="number" data-fee="'+x.id+'" data-k="'+k+'" value="'+esc(x[k]==null?"":x[k])+'" placeholder="'+esc(jp+" / "+vi)+'">'}
+function extrasBrief(x, month){
+  var xs=x.extras||[], i, xtr, d, inn, h;
+  if(!xs.length) return '<p class="note">追加実費なし / Không có phụ phí</p>';
+  h='<h3>'+bi("追加実費","Phụ phí")+'</h3><ul class="namelist">';
+  for(i=0;i<xs.length;i++){
+    xtr=xs[i]||{}; d=xtr.d?String(xtr.d):"";
+    inn=!d || d.slice(0,7)===month;
+    h+='<li>'+esc(d||"日付なし / Không ngày")+" "+esc(xtr.c||"")+' <b>'+yen(num(xtr.a))+'</b> '+(inn?'<span class="tag">今月 / Tháng này</span>':'<span class="tag">対象外 / Ngoài tháng</span>')+'</li>';
+  }
+  return h+"</ul>";
+}
+function fee(){
+  var month=ds(new Date()).slice(0,7), parts=month.split("-"), h, i, x;
+  h=head("費用","Chi phí", gear());
+  h+='<article class="stat"><span class="kjp">今月の実費</span><span class="kvi">Chi phí tháng này</span><div class="num" id="feeGrand">'+esc(yen(monthFees(month)))+'</div><div class="sub" id="feeGrandVi">'+esc(yenVi(monthFees(month)))+'</div><div class="mut">'+parts[0]+'年'+(+parts[1])+'月 / Tháng '+(+parts[1])+'/'+parts[0]+'</div></article>';
+  h+='<p class="note">各利用者の「月額＋加算＋食事回数×食事単価＋泊数×宿泊単価＋今月の追加実費」の合計です。日付のない追加は今月に含め、別の月の日付は除きます。<br>Tổng của từng người: phí tháng + khoản cộng + số bữa × đơn giá bữa + số đêm × đơn giá đêm + phụ phí trong tháng. Khoản không ghi ngày tính vào tháng này. Khoản có ngày thuộc tháng khác thì không tính.</p>';
+  if(!S.list.length) h+='<div class="card empty">'+bi("利用者がいないため、金額は0です。","Chưa có người dùng nên số tiền là 0.")+'</div>';
+  for(i=0;i<S.list.length;i++){
+    x=S.list[i];
+    h+='<div class="card"><div class="item"><b>'+esc(nameText(x))+'</b><button type="button" class="btn o" onclick="openR('+x.id+')">'+bi("台帳で編集","Sửa trong hồ sơ")+'</button></div>';
+    h+='<div class="g2">'+feeIn(x,"fee","月額の実費","Phí tháng")+feeIn(x,"kasan","加算","Khoản cộng")+'</div>';
+    h+='<div class="g2">'+feeIn(x,"feeMeal","食事の単価","Đơn giá một bữa")+feeIn(x,"meals","食事の回数","Số bữa")+'</div>';
+    h+='<div class="g2">'+feeIn(x,"feeNight","お泊まりの単価","Đơn giá một đêm")+feeIn(x,"nights","泊まった回数","Số đêm")+'</div>';
+    h+=extrasBrief(x, month);
+    h+='<div class="tot">今月の小計 / Tạm tính tháng này: <span id="sub_'+x.id+'">'+yen(userMonthFee(x, month))+'</span></div></div>';
+  }
+  $("app").innerHTML=h;
+}
+function bkText(){return JSON.stringify({v:2, list:S.list, plan:PLAN, ord:ORD})}
+function bkMsg(m){var e=$("bkm"); if(e) e.textContent=m}
+function bkMake(){
+  var t=bkText(), e=$("bk");
+  if(e){ e.value=t; try{e.focus(); e.setSelectionRange(0, t.length)}catch(x){} }
+  bkMsg("バックアップを作りました（"+S.list.length+"人）。 / Đã tạo bản sao lưu ("+S.list.length+" người).");
+}
+function fallbackCopyText(t, ok, no){
+  var ta=document.createElement("textarea");
+  ta.value=t; document.body.appendChild(ta); ta.select();
+  try{ if(document.execCommand && document.execCommand("copy")) ok(); else no(); }
+  catch(e){ no(); }
+  ta.remove();
+}
+function bkCopy(){
+  var e=$("bk"); if(e && !e.value) bkMake();
+  var t=e&&e.value?e.value:bkText();
+  var ok=function(){bkMsg("コピーしました。 / Đã chép.")};
+  var no=function(){bkMsg("コピーできません。枠を長押ししてすべて選択してください。 / Chưa chép được. Hãy nhấn giữ ô và chọn tất cả.")};
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, function(){fallbackCopyText(t,ok,no)});
+  else fallbackCopyText(t, ok, no);
+}
+function bkDownload(){
+  var t=bkText(), a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([t],{type:"application/json"}));
+  a.download="kaigo-backup.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  bkMsg("ファイルを保存しました。 / Đã lưu tệp.");
+}
+function bkShare(){
+  var e=$("bk"); if(e && !e.value) bkMake();
+  var t=e&&e.value?e.value:bkText();
+  if(navigator.share) navigator.share({title:"介護バックアップ / Sao lưu", text:t}).catch(function(){});
+  else bkMsg("この端末は共有に対応していません。コピーかファイル保存を使ってください。 / Máy này không hỗ trợ chia sẻ. Hãy chép hoặc lưu tệp.");
+}
+function bkFile(input){
+  var f=input.files && input.files[0];
+  input.value="";
+  if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var e=$("bk"); if(e) e.value=String(rd.result||"");
+    S.rc=0;
+    bkMsg("ファイルを読みました。確認してから復元を押してください。 / Đã đọc tệp. Hãy kiểm tra rồi bấm khôi phục.");
+  };
+  rd.onerror=function(){bkMsg("ファイルを読めません。 / Không đọc được tệp.")};
+  rd.readAsText(f);
+}
+function bkLoad(){
+  var b=$("rcb");
+  if(!S.rc){ S.rc=1; if(b) b.innerHTML=bi("もう一度押すと上書き復元します","Bấm lần nữa để khôi phục và ghi đè"); return; }
+  S.rc=0;
+  try{
+    var raw=$("bk")?$("bk").value:"", v=JSON.parse(raw), L=Array.isArray(v)?v:v.list;
+    if(!Array.isArray(L)) throw 0;
+    S.list=L;
+    if(!Array.isArray(v)){ PLAN=v.plan && typeof v.plan==="object"?v.plan:{}; ORD=v.ord && typeof v.ord==="object"?v.ord:{}; plSave(); ordSave(); }
+    fix();
+    if(!save()) bkMsg("端末に保存しきれませんでした。 / Không lưu hết được vào máy.");
+    else bkMsg("復元しました（"+L.length+"人）。 / Đã khôi phục ("+L.length+" người).");
+  }catch(x){
+    bkMsg("読めません。全文を貼ってください。 / Không đọc được. Hãy dán đủ toàn bộ chữ.");
+  }
+  b=$("rcb"); if(b) b.innerHTML=bi("上の内容から復元","Khôi phục từ ô trên");
+}
+function settings(){
+  var h=head("設定","Cài đặt", "");
+  h+='<div class="bar noprint"><button type="button" class="btn o" onclick="goTab(\'home\')">'+bi("ホームへ","Về trang chủ")+'</button></div>';
+  h+=msgBox();
+  h+='<div class="card"><h2>'+bi("名前の表示","Hiện tên")+'</h2>'+nameSwitch();
+  h+='<p class="note">オフのときは、ホーム・利用者・送迎・お泊まり・記録・連絡帳・費用の一覧で名前を隠します。連絡帳の日本語に本名が出るのも、オンのときだけです。台帳の編集画面では、オフでも本名を編集できます。設定は kaigo_shownames に保存します。<br>Khi tắt, tên bị ẩn ở trang chủ, danh sách, đưa đón, trọ lại, ghi chép, sổ liên lạc và chi phí. Tên thật trong sổ liên lạc tiếng Nhật chỉ hiện khi bật. Trong màn sửa hồ sơ vẫn sửa được tên thật khi tắt. Lưu ở khóa kaigo_shownames.</p></div>';
+  h+='<div class="card"><h2>'+bi("バックアップ","Sao lưu")+'</h2><p class="note">利用者、薬、連絡先、記録、送迎の個別日、順番、計画書の文章と添付を含みます。健康情報が入るので、施設が許す場所だけに保管してください。<br>Gồm người dùng, thuốc, liên hệ, ghi chép, ngày đưa đón đã sửa, thứ tự, nội dung và tệp kế hoạch. Có thông tin sức khỏe, chỉ giữ ở nơi cơ sở cho phép.</p>';
+  h+='<div class="bar"><button type="button" class="btn" onclick="bkMake()">'+bi("1. バックアップを作る","1. Tạo bản sao lưu")+'</button><button type="button" class="btn o" onclick="bkCopy()">'+bi("2. コピー","2. Chép")+'</button><button type="button" class="btn o" onclick="bkDownload()">'+bi("ファイルで保存","Lưu thành tệp")+'</button><button type="button" class="btn o" onclick="bkShare()">'+bi("共有","Chia sẻ")+'</button></div>';
+  h+='<textarea id="bk" placeholder="バックアップの文字がここに出ます。復元するときは全文を貼るか、JSONファイルを選んでください。 / Chữ sao lưu hiện ở đây. Để khôi phục, dán toàn bộ hoặc chọn tệp JSON."></textarea>';
+  h+='<div class="filebtn btn o" style="margin-top:8px"><span>'+bi("JSONファイルを読み込む","Đọc tệp JSON")+'</span><input type="file" accept="application/json,.json,text/plain" onchange="bkFile(this)" aria-label="JSONを読み込む / Đọc JSON"></div>';
+  h+='<div class="bar"><button type="button" class="btn d" id="rcb" onclick="bkLoad()">'+bi("上の内容から復元","Khôi phục từ ô trên")+'</button></div><div class="mut" id="bkm"></div></div>';
+  h+='<div class="card"><h2>'+bi("PINロック","Khóa PIN")+'</h2><p class="note">PINは軽い鍵です。データは暗号化しません。ほかのアプリに切り替えるとロックします。PINを忘れると、このページの保存データを消さないと戻せません。先にバックアップしてください。<br>PIN chỉ là khóa nhẹ, không mã hóa dữ liệu. Sẽ khóa khi chuyển sang ứng dụng khác. Nếu quên PIN, phải xóa dữ liệu đã lưu của trang này mới đặt lại được. Hãy sao lưu trước.</p>';
+  h+='<input type="password" inputmode="numeric" id="np" placeholder="新しいPIN（4〜8桁） / PIN mới (4 đến 8 số)" autocomplete="off">';
+  h+='<div class="bar"><button type="button" class="btn o" onclick="setPin()">'+bi("PINを設定","Đặt PIN")+'</button>';
+  if(getPin()) h+='<button type="button" class="btn o" onclick="lockNow()">'+bi("今すぐロック","Khóa ngay")+'</button><button type="button" class="btn d" onclick="clearPin()">'+bi("PINをオフ","Tắt PIN")+'</button>';
+  h+='</div><div class="mut" id="pn"></div></div>';
+  h+='<p class="note">保存キーは kaigo_v1、kaigo_ord、kaigo_plan、kaigo_pin、kaigo_shownames です。ネットへの同期はありません。ファイルをダブルクリックして使えます。<br>Khóa lưu là kaigo_v1, kaigo_ord, kaigo_plan, kaigo_pin, kaigo_shownames. Không đồng bộ lên mạng. Mở được bằng cách bấm đúp tệp.</p>';
+  $("app").innerHTML=h;
+}
+function getPin(){try{return localStorage.getItem(PK)}catch(e){return null}}
+function h256(x){return crypto.subtle.digest("SHA-256", new TextEncoder().encode("kg"+x)).then(function(buf){return Array.prototype.map.call(new Uint8Array(buf), function(v){return ("0"+v.toString(16)).slice(-2)}).join("")})}
+function lockScreen(){
+  $("app").innerHTML='<div class="card" style="margin-top:28px"><h2>'+bi("PINを入力","Nhập mã PIN")+'</h2><input type="password" inputmode="numeric" id="pin" placeholder="PIN / Mã PIN" autocomplete="off"><div class="bar"><button type="button" class="btn" onclick="tryPin()">'+bi("開く","Mở khóa")+'</button></div><div class="mut" id="pm"></div><p class="note">忘れた場合はバックアップが必要です。 / Nếu quên, cần bản sao lưu.</p></div>';
+  var p=$("pin"); if(p) p.onkeydown=function(e){ if(e.key==="Enter") tryPin(); };
+}
+function tryPin(){
+  var el=$("pin"); if(!el) return;
+  h256(el.value).then(function(h){
+    if(h===getPin()){ locked=false; render(); }
+    else { var m=$("pm"); if(m) m.textContent="PINが違います。 / Sai mã PIN."; }
+  }).catch(function(){ var m=$("pm"); if(m) m.textContent="この端末ではPINを確認できません。 / Máy này không kiểm tra được PIN."; });
+}
+function setPin(){
+  var v=$("np")?$("np").value:"", pn=$("pn");
+  if(!/^[0-9]{4,8}$/.test(v)){ if(pn) pn.textContent="4〜8桁の数字です。 / Nhập 4 đến 8 chữ số."; return; }
+  h256(v).then(function(h){
+    try{ localStorage.setItem(PK, h); }catch(e){ if(pn) pn.textContent="保存できません。 / Không lưu được."; return; }
+    S.msg="PINを設定しました。\nĐã đặt PIN.";
+    settings();
+  }).catch(function(){ if(pn) pn.textContent="この端末ではPINを設定できません。 / Máy này không đặt được PIN."; });
+}
+function clearPin(){ try{localStorage.removeItem(PK)}catch(e){} S.msg="PINをオフにしました。\nĐã tắt PIN."; settings(); }
+function lockNow(){ locked=true; render(); }
+
+var HOL_LIST=[
+["元日","Mùng 1 dương lịch","新しい年の平安","một năm mới bình an"],
+["成人の日","Ngày Thành nhân","新しい門出","bước vào đời của người trẻ"],
+["節分","Setsubun","豆まきと季節の飾り","ném đậu và đồ trang trí theo mùa"],
+["ひな祭り","Lễ Hina","おひな様と春の訪れ","búp bê Hina và mùa xuân"],
+["子どもの日","Ngày Trẻ em","鯉のぼりと子どもの成長","cờ cá chép và sự lớn lên của trẻ"],
+["七夕","Tanabata","短冊と星","thẻ ước và các vì sao"],
+["お盆","Lễ Obon","ご先祖を思う気持ち","tình cảm nhớ tổ tiên"],
+["敬老の日","Ngày Kính lão","日ごろの感謝","lòng biết ơn"],
+["秋分","Thu phân","秋の実りと昼と夜の長さ","mùa gặt và độ dài ngày đêm"],
+["文化の日","Ngày Văn hóa","文化の日の意味","ý nghĩa Ngày Văn hóa"],
+["七五三","Lễ Shichi-go-san","子どもの成長","sự lớn lên của trẻ"],
+["クリスマス","Giáng sinh","季節の飾りと行事","đồ trang trí và ngày lễ"],
+["正月","Tết Nhật","新年の挨拶と正月飾り","lời chào năm mới và đồ trang trí Tết"],
+["花見","Ngắm hoa","桜や春の花","hoa anh đào và hoa mùa xuân"],
+["梅雨","Mùa mưa phùn","雨の季節の過ごし方","cách sinh hoạt trong mùa mưa"],
+["猛暑","Nắng nóng gay gắt","暑い季節の過ごし方","cách sinh hoạt khi nắng gắt"],
+["紅葉","Lá đỏ mùa thu","紅葉の景色","cảnh lá đỏ mùa thu"],
+["冬","Mùa đông","寒い季節の過ごし方","cách sinh hoạt mùa lạnh"]
+];
+function holBy(key){var i; for(i=0;i<HOL_LIST.length;i++) if(HOL_LIST[i][0]===key) return HOL_LIST[i]; return null}
+function T2(rows){var o={}, i; for(i=0;i<rows.length;i++) o[rows[i][0]]=[[rows[i][1], rows[i][2]],[rows[i][3], rows[i][4]]]; return o}
+var MOOD=T2([
+["穏やか","終日、穏やかなご様子でした。","Suốt ngày trông điềm tĩnh.","表情は穏やかで、落ち着いて過ごされました。","Nét mặt điềm tĩnh và ở trạng thái bình tĩnh."],
+["にこやか","にこやかな表情が見られました。","Thấy nét mặt tươi.","笑顔の見られる時間がありました。","Có lúc thấy nụ cười."],
+["普通","ご様子は普通でした。","Tình trạng tinh thần ở mức bình thường.","ふだんどおりの様子で過ごされました。","Đã ở với vẻ như mọi khi."],
+["少し疲れ気味","少しお疲れの様子が見られました。","Thấy có vẻ hơi mệt.","ときどき疲れが見えるご様子でした。","Thỉnh thoảng trông có vẻ mệt."],
+["不安げ","ときどき不安そうなご様子がありました。","Thỉnh thoảng có vẻ lo.","不安げな表情が見られることがありました。","Có lúc thấy vẻ mặt lo."],
+["活気があった","活気のあるご様子でした。","Có vẻ có sức sống.","活気が見られる場面がありました。","Có lúc thấy sức sống."]
+]);
+var MEAL=T2([
+["全量","お食事は全量召し上がりました。","Bữa ăn đã ăn hết.","お食事は残さず召し上がりました。","Ăn hết, không để lại."],
+["おおむね完食","お食事はおおむね完食されました。","Bữa ăn gần hết.","お食事はほとんど召し上がりました。","Ăn gần hết suất."],
+["半分程度","お食事は半分程度でした。","Bữa ăn khoảng một nửa.","お食事の量は半分ほどでした。","Lượng ăn khoảng một nửa."],
+["少なめ","お食事の量は少なめでした。","Lượng ăn ít.","お食事は少なめにとどまりました。","Chỉ ăn một lượng ít."],
+["残すことが多い","お食事は残されることがありました。","Bữa ăn có để lại.","食べきれず、残されたものがありました。","Có phần không ăn hết và để lại."],
+["むせなく摂取","むせこみなくお食事されました。","Ăn không bị sặc.","お食事中にむせこみはありませんでした。","Trong bữa ăn không bị sặc."]
+]);
+var WATER=T2([
+["よく飲めた","水分はよくとれました。","Uống nước tốt.","水分をこまめにとられていました。","Có uống nước đều."],
+["普通","水分は普通の量でした。","Lượng nước ở mức thường.","水分摂取は普通量でした。","Uống nước ở mức bình thường."],
+["少なめ","水分は少なめでした。","Uống nước ít.","水分の量は少なめでした。","Lượng nước ít."],
+["促して摂取","声をかけて水分をとっていただきました。","Đã uống nước khi được nhắc.","促すことで水分をとられました。","Có uống nước nhờ được nhắc."]
+]);
+var BATH=T2([
+["入浴","入浴しました。","Đã tắm.","お風呂に入りました。","Đã tắm trong bồn."],
+["清拭","清拭をしました。","Đã lau người.","体を拭いて清潔にしました。","Đã lau người để giữ sạch."],
+["足浴","足浴をしました。","Đã ngâm chân.","足元を温める足浴をしました。","Đã ngâm chân để làm ấm bàn chân."],
+["なし","入浴・清拭・足浴はしていません。","Không tắm, không lau người, không ngâm chân.","本日は入浴、清拭、足浴とも行っていません。","Hôm nay không tắm, không lau người và không ngâm chân."]
+]);
+var MED=T2([
+["服用した","お薬は服用されました。","Đã uống thuốc.","お薬の服用を確認しました。","Đã xác nhận việc uống thuốc."],
+["服用していない","お薬の服用は確認できませんでした。","Chưa xác nhận được việc uống thuốc.","本日は服用していない状態でした。","Hôm nay ở tình trạng chưa uống thuốc."],
+["持参なし","お薬の持参はありませんでした。","Không mang thuốc đến.","本日、お薬は持参されていません。","Hôm nay không mang thuốc tới."],
+["該当なし","本日、服薬の対応はありませんでした。","Hôm nay không có việc uống thuốc.","服薬の対象はありませんでした。","Không thuộc trường hợp uống thuốc."]
+]);
+var APP=T2([
+["あり","食欲はありました。","Có cảm giác muốn ăn.","食べる意欲が見られました。","Thấy có muốn ăn."],
+["普通","食欲は普通でした。","Muốn ăn ở mức bình thường.","食欲はふつうの様子でした。","Cảm giác thèm ăn ở mức thường."],
+["少なめ","食欲は少なめでした。","Ít muốn ăn.","食欲があまり旺盛ではありませんでした。","Không thấy muốn ăn nhiều."],
+["なし","食欲はあまりありませんでした。","Hầu như không thấy muốn ăn.","食事への意欲は少なめでした。","Ít thấy hứng ăn."]
+]);
+var SLEEP=T2([
+["良好","睡眠は良好でした。","Giấc ngủ tốt.","よく眠れた様子でした。","Có vẻ ngủ ngon."],
+["普通","睡眠は普通でした。","Giấc ngủ ở mức bình thường.","睡眠はふつうの様子でした。","Giấc ngủ trông như thường."],
+["浅かった","睡眠は浅めでした。","Giấc ngủ nông.","眠りが浅い様子でした。","Có vẻ ngủ không sâu."],
+["昼夜逆転気味","昼夜のリズムが乱れ気味でした。","Nhịp ngày đêm có phần lệch.","夜と昼の眠りが逆転し気味でした。","Giấc ngủ ngày và đêm có phần đảo."]
+]);
+var REC=T2([
+["体操","レクリエーションでは体操をしました。","Trong giờ vui chơi có tập thể dục.","体操の時間に参加されました。","Có tham gia giờ thể dục."],
+["歌唱","レクリエーションでは歌を楽しみました。","Trong giờ vui chơi có hát.","歌の活動に参加されました。","Có tham gia hoạt động hát."],
+["ゲーム","レクリエーションではゲームをしました。","Trong giờ vui chơi có chơi trò chơi.","ゲームの活動に参加されました。","Có tham gia trò chơi."],
+["手芸","レクリエーションでは手芸をしました。","Trong giờ vui chơi có làm thủ công.","手芸の活動に参加されました。","Có tham gia thủ công."],
+["散歩","散歩の時間を持ちました。","Đã có giờ đi dạo.","散歩をしました。","Đã đi dạo."],
+["会話","会話を楽しむ時間がありました。","Đã có giờ trò chuyện.","職員やほかの方とお話をされました。","Đã nói chuyện với nhân viên hoặc người khác."],
+["脳トレ","脳トレに取り組みました。","Đã làm bài tập trí não.","頭を使う遊びの時間がありました。","Đã có giờ chơi dùng đến trí nhớ."],
+["塗り絵","塗り絵をしました。","Đã tô tranh.","塗り絵の時間に参加されました。","Có tham gia giờ tô tranh."],
+["園芸","園芸の活動をしました。","Đã làm hoạt động vườn.","植物に触れる活動をしました。","Đã có hoạt động với cây."],
+["なし","本日、レクリエーションは行っていません。","Hôm nay không tổ chức vui chơi.","レクリエーションの時間はありませんでした。","Không có giờ vui chơi."]
+]);
+var REHAB=T2([
+["実施した","リハビリ・運動を行いました。","Đã tập phục hồi và vận động.","運動のプログラムを行いました。","Đã làm chương trình vận động."],
+["軽めに実施","軽い運動にとどめました。","Chỉ vận động nhẹ.","無理のない範囲の運動をしました。","Đã vận động trong mức không gắng sức."],
+["見合わせ","本日のリハビリは見合わせました。","Hôm nay tạm hoãn phục hồi chức năng.","本日はリハビリを行っていません。","Hôm nay không tập phục hồi chức năng."],
+["該当なし","本日、リハビリの予定はありませんでした。","Hôm nay không có lịch phục hồi.","リハビリのプログラムはありませんでした。","Không có chương trình phục hồi."]
+]);
+var TOM=T2([
+["通常どおりお迎え","明日は通常どおりお迎えに伺う予定です。","Ngày mai dự kiến đón như thường lệ.","明日のお迎えは通常の予定です。","Giờ đón ngày mai theo lịch thường."],
+["お休み","明日はお休みの予定です。","Ngày mai dự kiến nghỉ.","明日はご利用のない予定です。","Ngày mai dự kiến không sử dụng dịch vụ."],
+["お泊まり","明日はお泊まりの予定です。","Ngày mai dự kiến ở lại đêm.","明日は宿泊の予定です。","Ngày mai có kế hoạch ngủ lại."],
+["時間変更あり","明日はお迎え時間の変更があります。","Ngày mai có đổi giờ đón.","明日の送迎時間は変更の予定です。","Giờ đưa đón ngày mai dự kiến thay đổi."],
+["その他","明日は個別の予定です。","Ngày mai có lịch riêng.","明日は通常とは別の予定です。","Ngày mai có lịch khác thường."]
+]);
+function greetCtx(){
+  return {w:REN.weather||"", s:REN.season||"", h:REN.holiday||"", tom:REN.tomorrow||"", stay:renStaying()};
+}
+function renStaying(){
+  var x, st, i;
+  if(REN.tomorrow==="お泊まり") return true;
+  x=byId(S.renUid);
+  if(!x || !S.renDate) return false;
+  st=getStay(S.renDate);
+  for(i=0;i<st.length;i++) if(st[i] && +st[i].id===+x.id) return true;
+  return false;
+}
+function lineOk(line, ctx){
+  if(line.home && ctx.stay) return false;
+  if(line.stay && !ctx.stay) return false;
+  if(line.w && line.w!==ctx.w) return false;
+  if(line.s && line.s!==ctx.s) return false;
+  if(line.hol && !ctx.h) return false;
+  if(line.tom && line.tom!==ctx.tom) return false;
+  return true;
+}
+function lineBucket(line){
+  if(line.hol) return 0;
+  if(line.w) return 1;
+  if(line.tom) return 2;
+  if(line.s) return 3;
+  if(line.home || line.stay) return 4;
+  return 5;
+}
+function poolOf(lines, ctx){
+  var g=[[],[],[],[],[],[]], i, pool=[], line, signals=[];
+  for(i=0;i<lines.length;i++){
+    line=lines[i];
+    if(!lineOk(line, ctx)) continue;
+    g[lineBucket(line)].push(line);
+  }
+  if(ctx.h && g[0].length) signals.push(g[0]);
+  if((ctx.w || ctx.s) && g[1].length) signals.push(g[1]);
+  if(ctx.tom && g[2].length) signals.push(g[2]);
+  if(ctx.s && g[3].length && !g[1].length) signals.push(g[3]);
+  for(i=0;i<signals.length;i++) pool=pool.concat(signals[i]);
+  if(!pool.length) pool=g[4].length?g[4].slice():(g[5].length?g[5].slice():lines.slice());
+  return pool;
+}
+function pickFrom(lines, salt){
+  var pool=poolOf(lines, greetCtx()), s, h=0, i, pat;
+  s=String(S.renUid||"")+"|"+String(S.renDate||"")+"|"+salt+"|"+String(REN.pat||0);
+  for(i=0;i<s.length;i++) h=(h*33+s.charCodeAt(i))>>>0;
+  pat=((Number(REN.pat)||0)%12+12)%12;
+  return pool[(h+pat)%pool.length];
+}
+function greetLine(lines, key){
+  var id=REN[key]||"", i;
+  if(id){ for(i=0;i<lines.length;i++) if(lines[i].id===id) return lines[i]; }
+  return pickFrom(lines, key);
+}
+function fillGreet(line, x){
+  var d=dispName(x), h=holBy(REN.holiday);
+  var nm=(showNames && x && x.name)?x.name:(showNames?"ご利用者":d.jp);
+  var nmVi=(showNames && x && x.name)?x.name:(showNames?"người sử dụng":d.vi);
+  var hj=h?h[0]:"今日の行事", hv=h?h[1]:"sự kiện hôm nay";
+  return {
+    jp:String(line.jp).split("{名}").join(nm).split("{行事}").join(hj),
+    vi:String(line.vi).split("{名}").join(nmVi).split("{行事}").join(hv)
+  };
+}
+var OPEN_LINES=[
+{id:"o01",jp:"本日も当事業所をご利用いただき、ありがとうございます。",vi:"Cảm ơn đã sử dụng cơ sở của chúng tôi hôm nay."},
+{id:"o02",jp:"今日も一日、デイサービスをご利用くださいまして、ありがとうございました。",vi:"Cảm ơn đã dùng dịch vụ ban ngày suốt hôm nay."},
+{id:"o03",jp:"本日のご利用、誠にありがとうございました。一日の様子をお伝えいたします。",vi:"Xin chân thành cảm ơn đã sử dụng dịch vụ hôm nay. Xin kể tình hình trong ngày."},
+{id:"o04",jp:"いつもご利用いただき、ありがとうございます。本日の様子をご報告いたします。",vi:"Cảm ơn đã luôn tin dùng dịch vụ. Xin báo tình hình hôm nay."},
+{id:"o05",jp:"ご家族の皆さまへ。本日もありがとうございました。ご様子をお知らせします。",vi:"Gửi gia đình. Hôm nay cũng xin cảm ơn. Xin báo tình hình."},
+{id:"o06",jp:"本日もご利用ありがとうございました。様子は次のとおりです。",vi:"Cảm ơn đã sử dụng dịch vụ hôm nay. Tình hình như sau."},
+{id:"o07",jp:"スタッフ一同、本日のご利用をありがとうございました。",vi:"Toàn thể nhân viên cảm ơn đã sử dụng dịch vụ hôm nay."},
+{id:"o08",jp:"今日も事業所でお過ごしいただきました。様子をお伝えします。",vi:"Hôm nay cũng đã ở tại cơ sở. Xin kể tình hình."},
+{id:"o09",jp:"{名}様、こんにちは。本日もご利用いただき、ありがとうございます。",vi:"Xin chào {名}. Cảm ơn đã sử dụng dịch vụ hôm nay."},
+{id:"o10",jp:"{名}様、本日もお越しくださり、ありがとうございました。",vi:"Cảm ơn {名} đã ghé hôm nay."},
+{id:"o11",jp:"こんにちは。本日も当デイサービスをご利用いただき、感謝申し上げます。",vi:"Xin chào. Xin cảm ơn đã sử dụng dịch vụ ban ngày hôm nay."},
+{id:"o12",jp:"ご家族の皆さま、こんにちは。今日一日のことをお伝えします。",vi:"Xin chào gia đình. Xin kể chuyện cả ngày hôm nay."},
+{id:"o13",jp:"本日は冷え込む一日です。どうぞお体を大切になさってください。",vi:"Hôm nay trời lạnh. Xin hãy giữ gìn sức khỏe.",w:"寒い"},
+{id:"o14",jp:"寒い日が続いております。暖かくしてお過ごしください。",vi:"Những ngày lạnh vẫn tiếp tục. Xin hãy giữ ấm.",w:"寒い"},
+{id:"o15",jp:"今日は冷たい空気です。体調にお変わりなくお過ごしください。",vi:"Hôm nay không khí lạnh. Xin giữ sức khỏe như thường.",w:"寒い"},
+{id:"o16",jp:"{名}様、こんにちは。冷え込みますので、どうぞお体をおいといください。",vi:"Xin chào {名}. Trời lạnh, xin hãy giữ gìn sức khỏe.",w:"寒い"},
+{id:"o17",jp:"本日は暑い一日です。水分をとって、どうぞご自愛ください。",vi:"Hôm nay trời nóng. Xin uống nước và giữ gìn sức khỏe.",w:"蒸し暑い"},
+{id:"o18",jp:"蒸し暑さが残る一日です。涼しくしてお過ごしください。",vi:"Một ngày còn oi bức. Xin ở nơi mát và giữ sức khỏe.",w:"蒸し暑い"},
+{id:"o19",jp:"厳しい暑さです。どうかお体を大切になさってください。",vi:"Nắng nóng gay gắt. Xin hãy giữ gìn sức khỏe.",w:"蒸し暑い"},
+{id:"o20",jp:"{名}様、こんにちは。暑い日ですので、水分を忘れずにお過ごしください。",vi:"Xin chào {名}. Trời nóng, xin nhớ uống nước.",w:"蒸し暑い"},
+{id:"o21",jp:"本日は雨の一日です。足元にお気をつけてお過ごしください。",vi:"Hôm nay trời mưa. Xin chú ý bước chân.",w:"雨"},
+{id:"o22",jp:"雨が降っております。どうぞ暖かく、お体にお気をつけください。",vi:"Trời đang mưa. Xin giữ ấm và chú ý sức khỏe.",w:"雨"},
+{id:"o23",jp:"雨の一日でしたが、事業所では落ち着いてお過ごしでした。ご報告いたします。",vi:"Một ngày mưa, nhưng tại cơ sở đã ở yên ổn. Xin báo lại.",w:"雨"},
+{id:"o24",jp:"{名}様、こんにちは。雨の日ですので、どうぞお体を大切になさってください。",vi:"Xin chào {名}. Trời mưa, xin hãy giữ gìn sức khỏe.",w:"雨"},
+{id:"o25",jp:"本日はお天気に恵まれた一日です。ご利用ありがとうございます。",vi:"Hôm nay trời đẹp. Cảm ơn đã sử dụng dịch vụ.",w:"晴れ"},
+{id:"o26",jp:"気持ちのよい晴れの日です。本日の様子をお伝えします。",vi:"Một ngày nắng dễ chịu. Xin kể tình hình hôm nay.",w:"晴れ"},
+{id:"o27",jp:"良いお天気のなか、本日もご利用いただきありがとうございました。",vi:"Trong ngày thời tiết đẹp, cảm ơn đã sử dụng dịch vụ hôm nay.",w:"晴れ"},
+{id:"o28",jp:"{名}様、こんにちは。気持ちのよい一日になりました。",vi:"Xin chào {名}. Hôm nay là một ngày dễ chịu.",w:"晴れ"},
+{id:"o29",jp:"本日は曇り空です。事業所では穏やかにお過ごしでした。",vi:"Hôm nay trời nhiều mây. Tại cơ sở đã ở yên ổn.",w:"くもり"},
+{id:"o30",jp:"雲の多い一日です。本日もご利用ありがとうございます。",vi:"Một ngày nhiều mây. Cảm ơn đã sử dụng dịch vụ hôm nay.",w:"くもり"},
+{id:"o31",jp:"どんよりとした空模様でしたが、室内では落ち着いてお過ごしです。",vi:"Trời có vẻ u ám, nhưng trong nhà đã ở yên ổn.",w:"くもり"},
+{id:"o32",jp:"本日は雪の一日です。足元が滑りやすくなっておりますので、どうぞお気をつけください。",vi:"Hôm nay có tuyết. Đường trơn, xin hãy cẩn thận.",w:"雪"},
+{id:"o33",jp:"雪が舞う寒い日です。暖かくして、お体を大切になさってください。",vi:"Một ngày lạnh có tuyết. Xin giữ ấm và giữ gìn sức khỏe.",w:"雪"},
+{id:"o34",jp:"{名}様、こんにちは。雪の日ですので、どうぞご無理なさらないでください。",vi:"Xin chào {名}. Ngày có tuyết, xin đừng gắng sức.",w:"雪"},
+{id:"o35",jp:"風の強い一日です。お体にお気をつけてお過ごしください。",vi:"Một ngày gió mạnh. Xin chú ý sức khỏe.",w:"風が強い"},
+{id:"o36",jp:"風が冷たく感じる一日です。暖かくしてお過ごしください。",vi:"Một ngày gió lạnh. Xin hãy giữ ấm.",w:"風が強い"},
+{id:"o37",jp:"あたたかな一日です。本日もご利用ありがとうございます。",vi:"Một ngày ấm áp. Cảm ơn đã sử dụng dịch vụ hôm nay.",w:"暖かい"},
+{id:"o38",jp:"過ごしやすい陽気です。様子をお伝えいたします。",vi:"Thời tiết dễ chịu. Xin kể tình hình.",w:"暖かい"},
+{id:"o39",jp:"{名}様、こんにちは。あたたかな一日になりました。",vi:"Xin chào {名}. Hôm nay trời ấm áp.",w:"暖かい"},
+{id:"o40",jp:"春のあたたかな季節になりました。本日もご利用ありがとうございます。",vi:"Đã sang mùa xuân ấm áp. Cảm ơn đã sử dụng dịch vụ hôm nay.",s:"春"},
+{id:"o41",jp:"春らしい一日です。季節の移ろいとともに、本日の様子をお伝えします。",vi:"Một ngày đậm chất xuân. Xin kể tình hình hôm nay cùng nhịp mùa.",s:"春"},
+{id:"o42",jp:"花の季節となりました。本日も当事業所をご利用いただき、ありがとうございます。",vi:"Đã đến mùa hoa. Cảm ơn đã sử dụng cơ sở của chúng tôi hôm nay.",s:"春"},
+{id:"o43",jp:"{名}様、こんにちは。春のあたたかな一日です。",vi:"Xin chào {名}. Hôm nay là một ngày xuân ấm áp.",s:"春"},
+{id:"o44",jp:"梅雨の季節となりました。湿気が多くなりますので、どうぞご自愛ください。",vi:"Đã vào mùa mưa phùn. Độ ẩm cao, xin hãy giữ gìn sức khỏe.",s:"梅雨"},
+{id:"o45",jp:"雨の多い季節です。本日も事業所でお過ごしいただき、ありがとうございます。",vi:"Mùa nhiều mưa. Cảm ơn đã ở tại cơ sở hôm nay.",s:"梅雨"},
+{id:"o46",jp:"梅雨空が続く頃です。お体を大切に、本日の様子をご報告します。",vi:"Những ngày trời mưa phùn vẫn tiếp tục. Xin giữ sức khỏe, và xin báo tình hình hôm nay.",s:"梅雨"},
+{id:"o47",jp:"夏の暑い季節になりました。水分を忘れず、どうぞご自愛ください。",vi:"Đã sang mùa hè nóng. Đừng quên uống nước, xin giữ gìn sức khỏe.",s:"夏"},
+{id:"o48",jp:"暑さの続く季節です。本日もご利用ありがとうございます。",vi:"Mùa nóng vẫn tiếp diễn. Cảm ơn đã sử dụng dịch vụ hôm nay.",s:"夏"},
+{id:"o49",jp:"{名}様、こんにちは。暑い季節ですので、どうかお体をおいといください。",vi:"Xin chào {名}. Mùa nóng, xin hãy giữ gìn sức khỏe.",s:"夏"},
+{id:"o50",jp:"厳しい暑さの季節です。涼しくしてお過ごしください。",vi:"Đây là mùa nắng gắt. Xin ở nơi mát.",s:"猛暑"},
+{id:"o51",jp:"猛暑が続いております。水分をこまめに、お体を大切になさってください。",vi:"Đợt nắng gắt vẫn tiếp tục. Xin uống nước đều và giữ gìn sức khỏe.",s:"猛暑"},
+{id:"o52",jp:"とても暑い日が続いています。ご無理のないよう、お願いいたします。",vi:"Những ngày rất nóng vẫn tiếp diễn. Xin đừng gắng sức.",s:"猛暑"},
+{id:"o53",jp:"秋の気配が感じられる季節になりました。本日のご利用ありがとうございます。",vi:"Đã sang mùa có hơi thu. Cảm ơn đã sử dụng dịch vụ hôm nay.",s:"秋"},
+{id:"o54",jp:"過ごしやすい秋の一日です。様子をお伝えいたします。",vi:"Một ngày thu dễ chịu. Xin kể tình hình.",s:"秋"},
+{id:"o55",jp:"秋も深まる頃です。どうぞ暖かくしてお過ごしください。",vi:"Thu đã sâu hơn. Xin hãy giữ ấm.",s:"秋"},
+{id:"o56",jp:"{名}様、こんにちは。秋の一日を、事業所でお過ごしいただきました。",vi:"Xin chào {名}. Đã trải qua một ngày thu tại cơ sở.",s:"秋"},
+{id:"o57",jp:"寒い季節になりました。どうぞ暖かく、お体を大切になさってください。",vi:"Đã sang mùa lạnh. Xin giữ ấm và giữ gìn sức khỏe.",s:"冬"},
+{id:"o58",jp:"冬の冷え込みが続いております。本日もご利用ありがとうございます。",vi:"Rét mùa đông vẫn tiếp tục. Cảm ơn đã sử dụng dịch vụ hôm nay.",s:"冬"},
+{id:"o59",jp:"冬の一日です。暖かくしてお過ごしの様子を、お伝えします。",vi:"Một ngày mùa đông. Xin kể tình hình đã ở ấm áp.",s:"冬"},
+{id:"o60",jp:"{名}様、こんにちは。寒い季節ですので、どうぞご自愛ください。",vi:"Xin chào {名}. Mùa lạnh, xin hãy giữ gìn sức khỏe.",s:"冬"},
+{id:"o61",jp:"本日は「{行事}」です。ご利用いただき、ありがとうございます。",vi:"Hôm nay là 「{行事}」. Cảm ơn đã sử dụng dịch vụ.",hol:1},
+{id:"o62",jp:"「{行事}」の頃となりました。季節の話とともに、一日をお過ごしです。",vi:"Đã đến dịp 「{行事}」. Đã trải qua ngày cùng chuyện mùa.",hol:1},
+{id:"o63",jp:"{名}様、こんにちは。「{行事}」の一日を、事業所でお過ごしいただきました。",vi:"Xin chào {名}. Đã trải qua ngày 「{行事}」 tại cơ sở.",hol:1},
+{id:"o64",jp:"「{行事}」にあたり、本日も当事業所をご利用いただき感謝いたします。",vi:"Nhân dịp 「{行事}」, xin cảm ơn đã sử dụng cơ sở hôm nay.",hol:1},
+{id:"o65",jp:"今夜はお泊まりでご利用いただきます。本日もありがとうございます。",vi:"Tối nay sẽ ở lại đêm. Cảm ơn hôm nay.",stay:1},
+{id:"o66",jp:"お泊まりのご利用です。今夜もどうぞ安心してお過ごしください。",vi:"Đây là lần ở lại đêm. Tối nay xin hãy ở yên tâm.",stay:1},
+{id:"o67",jp:"{名}様、今夜はこちらでお泊まりです。本日もありがとうございました。",vi:"{名} tối nay ở lại đây. Cảm ơn hôm nay.",stay:1}
+];
+var CLOSE_LINES=[
+{id:"c01",jp:"またのご利用を心よりお待ちしております。",vi:"Chúng tôi chân thành mong được đón tiếp lần sau.",home:1},
+{id:"c02",jp:"今夜はどうぞゆっくりお休みください。",vi:"Tối nay xin hãy nghỉ ngơi thật tốt.",home:1},
+{id:"c03",jp:"次回もこちらでお待ちしております。",vi:"Lần sau chúng tôi sẽ đợi ở đây.",home:1},
+{id:"c04",jp:"お帰りはどうぞお気をつけて。",vi:"Xin hãy cẩn thận trên đường về.",home:1},
+{id:"c05",jp:"道中、お体にお気をつけてお帰りくださいませ。",vi:"Trên đường về, xin hãy giữ sức khỏe và cẩn thận.",home:1},
+{id:"c06",jp:"またお会いできる日を楽しみにしております。",vi:"Chúng tôi mong ngày được gặp lại.",home:1},
+{id:"c07",jp:"本日もありがとうございました。良い夜をお過ごしください。",vi:"Cảm ơn hôm nay. Chúc một đêm tốt lành.",home:1},
+{id:"c08",jp:"気になることがございましたら、いつでも事業所までご連絡ください。",vi:"Nếu có điều băn khoăn, xin liên lạc với cơ sở bất cứ lúc nào.",home:1},
+{id:"c09",jp:"お足元にお気をつけて、お帰りください。",vi:"Xin chú ý bước chân và về nhà an toàn.",home:1},
+{id:"c10",jp:"スタッフ一同、またお会いできるのを楽しみにしております。",vi:"Toàn thể nhân viên mong được gặp lại.",home:1},
+{id:"c11",jp:"今夜はこちらでゆっくりお休みください。",vi:"Tối nay xin nghỉ ngơi tại đây.",stay:1},
+{id:"c12",jp:"お泊まりの夜も、安心してお過ごしいただけるよう見守ってまいります。",vi:"Đêm ở lại, chúng tôi sẽ trông để mọi người yên tâm.",stay:1},
+{id:"c13",jp:"今夜は事業所でお休みになります。あたたかくお世話いたします。",vi:"Tối nay nghỉ tại cơ sở. Chúng tôi sẽ chăm sóc cho ấm áp.",stay:1},
+{id:"c14",jp:"お泊まりのあいだも、変わらずお世話してまいります。",vi:"Suốt thời gian ở lại, chúng tôi vẫn chăm sóc như thường.",stay:1},
+{id:"c15",jp:"今夜はこちらでおやすみください。どうぞよい夜を。",vi:"Tối nay xin ngủ lại đây. Chúc một đêm tốt.",stay:1},
+{id:"c16",jp:"お泊まりのご利用、ありがとうございます。今夜もよろしくお願いいたします。",vi:"Cảm ơn đã ở lại đêm. Tối nay cũng xin nhờ mọi người yên tâm.",stay:1},
+{id:"c17",jp:"本日は冷えております。暖かくしてお帰りください。",vi:"Hôm nay trời lạnh. Xin giữ ấm trên đường về.",w:"寒い",home:1},
+{id:"c18",jp:"冷えますので、お帰りのあとはゆっくりお休みください。",vi:"Trời lạnh, sau khi về xin nghỉ ngơi thật tốt.",w:"寒い",home:1},
+{id:"c19",jp:"寒い一日でした。道中お気をつけて、今夜は暖かくお過ごしください。",vi:"Một ngày lạnh. Xin cẩn thận trên đường và giữ ấm tối nay.",w:"寒い",home:1},
+{id:"c20",jp:"今夜は冷え込みます。こちらで暖かくお休みください。",vi:"Đêm nay trời lạnh. Xin nghỉ ấm tại đây.",w:"寒い",stay:1},
+{id:"c21",jp:"冷える夜です。事業所で暖かくお世話いたします。",vi:"Đêm lạnh. Tại cơ sở chúng tôi sẽ chăm sóc cho ấm.",w:"寒い",stay:1},
+{id:"c22",jp:"暑さが残ります。お帰りの際も、水分にお気をつけください。",vi:"Nóng vẫn còn. Trên đường về cũng xin chú ý uống nước.",w:"蒸し暑い",home:1},
+{id:"c23",jp:"暑い一日でした。涼しいところでゆっくりお休みください。",vi:"Một ngày nóng. Xin nghỉ ở nơi mát.",w:"蒸し暑い",home:1},
+{id:"c24",jp:"厳しい暑さのなか、お帰りはどうぞご無理なさらず。",vi:"Giữa nắng gắt, trên đường về xin đừng gắng sức.",w:"蒸し暑い",home:1},
+{id:"c25",jp:"暑い夜ですが、涼しくしてお休みいただけるようお世話します。",vi:"Đêm nóng, chúng tôi sẽ chăm để nghỉ cho mát.",w:"蒸し暑い",stay:1},
+{id:"c26",jp:"暑さが残る夜です。こちらでゆっくりお休みください。",vi:"Đêm còn nóng. Xin nghỉ ngơi tại đây.",w:"蒸し暑い",stay:1},
+{id:"c27",jp:"雨で足元が悪くなっております。お気をつけてお帰りください。",vi:"Mưa nên đường trơn. Xin cẩn thận trên đường về.",w:"雨",home:1},
+{id:"c28",jp:"雨の中ですが、どうか気をつけてお帰りくださいませ。",vi:"Trời mưa, xin hãy cẩn thận trên đường về.",w:"雨",home:1},
+{id:"c29",jp:"雨の一日でした。お帰りは足元にお気をつけて。",vi:"Một ngày mưa. Trên đường về xin chú ý bước chân.",w:"雨",home:1},
+{id:"c30",jp:"外は雨ですが、今夜はこちらでゆっくりお休みください。",vi:"Ngoài trời mưa, tối nay xin nghỉ ngơi tại đây.",w:"雨",stay:1},
+{id:"c31",jp:"雨の夜も、こちらで落ち着いてお過ごしください。",vi:"Đêm mưa, xin ở yên ổn tại đây.",w:"雨",stay:1},
+{id:"c32",jp:"良いお天気でした。お気をつけてお帰りください。",vi:"Thời tiết đẹp. Xin cẩn thận trên đường về.",w:"晴れ",home:1},
+{id:"c33",jp:"気持ちのよい一日でした。またのご利用をお待ちしております。",vi:"Một ngày dễ chịu. Mong được đón tiếp lần sau.",w:"晴れ",home:1},
+{id:"c34",jp:"晴れの一日、ありがとうございました。道中お気をつけて。",vi:"Ngày nắng, xin cảm ơn. Xin cẩn thận trên đường.",w:"晴れ",home:1},
+{id:"c35",jp:"良いお天気の夜も、こちらでゆっくりおやすみください。",vi:"Đêm trời đẹp, xin ngủ ngon tại đây.",w:"晴れ",stay:1},
+{id:"c36",jp:"晴れの一日でした。今夜はこちらでお休みください。",vi:"Một ngày nắng. Tối nay xin nghỉ tại đây.",w:"晴れ",stay:1},
+{id:"c37",jp:"曇り空の一日でした。お帰りはどうぞお気をつけて。",vi:"Một ngày nhiều mây. Xin cẩn thận trên đường về.",w:"くもり",home:1},
+{id:"c38",jp:"雲の多い一日でした。今夜はゆっくりお休みください。",vi:"Một ngày nhiều mây. Tối nay xin nghỉ ngơi.",w:"くもり",home:1},
+{id:"c39",jp:"曇りの夜も、こちらでゆっくりお休みください。",vi:"Đêm nhiều mây, xin nghỉ ngơi tại đây.",w:"くもり",stay:1},
+{id:"c39b",jp:"雲の多い夜も、事業所でゆっくりおやすみください。",vi:"Đêm nhiều mây, xin ngủ ngon tại cơ sở.",w:"くもり",stay:1},
+{id:"c40",jp:"雪の中、足元にお気をつけてお帰りください。",vi:"Trong tuyết, xin chú ý bước chân trên đường về.",w:"雪",home:1},
+{id:"c41",jp:"雪が残ります。暖かくして、お気をつけてお帰りください。",vi:"Tuyết còn. Xin giữ ấm và cẩn thận trên đường về.",w:"雪",home:1},
+{id:"c42",jp:"雪の夜です。こちらで暖かくお休みください。",vi:"Đêm có tuyết. Xin nghỉ ấm tại đây.",w:"雪",stay:1},
+{id:"c42b",jp:"雪の降る夜です。こちらであたたかくお世話いたします。",vi:"Đêm tuyết rơi. Tại đây chúng tôi chăm cho ấm.",w:"雪",stay:1},
+{id:"c43",jp:"風が強いですので、お帰りはお気をつけてください。",vi:"Gió mạnh, xin cẩn thận trên đường về.",w:"風が強い",home:1},
+{id:"c44",jp:"風の冷たい一日でした。暖かくしてお帰りください。",vi:"Một ngày gió lạnh. Xin giữ ấm trên đường về.",w:"風が強い",home:1},
+{id:"c45",jp:"風の強い夜ですが、こちらで落ち着いてお休みください。",vi:"Đêm gió mạnh, xin nghỉ yên ổn tại đây.",w:"風が強い",stay:1},
+{id:"c45b",jp:"風が強い夜です。こちらで安心してお休みください。",vi:"Đêm gió mạnh. Xin nghỉ yên tâm tại đây.",w:"風が強い",stay:1},
+{id:"c46",jp:"あたたかな一日でした。お気をつけてお帰りください。",vi:"Một ngày ấm áp. Xin cẩn thận trên đường về.",w:"暖かい",home:1},
+{id:"c47",jp:"過ごしやすい一日でした。またお待ちしております。",vi:"Một ngày dễ chịu. Chúng tôi sẽ đợi lần sau.",w:"暖かい",home:1},
+{id:"c48",jp:"あたたかな夜です。こちらでゆっくりおやすみください。",vi:"Đêm ấm áp. Xin ngủ ngon tại đây.",w:"暖かい",stay:1},
+{id:"c48b",jp:"あたたかな夜を、こちらでゆっくりお過ごしください。",vi:"Đêm ấm, xin ở yên ổn tại đây.",w:"暖かい",stay:1},
+{id:"c49",jp:"春の一日、ご利用ありがとうございました。お気をつけてお帰りください。",vi:"Một ngày xuân, cảm ơn đã sử dụng dịch vụ. Xin cẩn thận trên đường về.",s:"春",home:1},
+{id:"c50",jp:"春のあたたかさのなか、またのご利用をお待ちしております。",vi:"Trong cái ấm của mùa xuân, mong được đón tiếp lần sau.",s:"春",home:1},
+{id:"c51",jp:"春の夜も、こちらでゆっくりお休みください。",vi:"Đêm xuân, xin nghỉ ngơi tại đây.",s:"春",stay:1},
+{id:"c51b",jp:"春の夜を、こちらでゆっくりお過ごしください。",vi:"Đêm xuân, xin ở yên ổn tại đây.",s:"春",stay:1},
+{id:"c52",jp:"梅雨の折、足元にお気をつけてお帰りください。",vi:"Giữa mùa mưa, xin chú ý bước chân trên đường về.",s:"梅雨",home:1},
+{id:"c53",jp:"湿気の多い季節です。お帰りもお体にお気をつけください。",vi:"Mùa ẩm. Trên đường về cũng xin chú ý sức khỏe.",s:"梅雨",home:1},
+{id:"c54",jp:"梅雨の夜は、こちらでゆっくりお休みください。",vi:"Đêm mùa mưa, xin nghỉ ngơi tại đây.",s:"梅雨",stay:1},
+{id:"c54b",jp:"梅雨の湿る夜も、こちらで落ち着いてお休みください。",vi:"Đêm ẩm mùa mưa, xin nghỉ yên ổn tại đây.",s:"梅雨",stay:1},
+{id:"c55",jp:"暑い季節です。お帰りも水分にお気をつけください。",vi:"Mùa nóng. Trên đường về cũng xin chú ý uống nước.",s:"夏",home:1},
+{id:"c56",jp:"夏の一日、ありがとうございました。涼しいところでお休みください。",vi:"Một ngày hè, xin cảm ơn. Xin nghỉ ở nơi mát.",s:"夏",home:1},
+{id:"c57",jp:"暑い季節の夜も、涼しくしてお休みいただけるようお世話します。",vi:"Đêm mùa nóng, chúng tôi sẽ chăm để nghỉ cho mát.",s:"夏",stay:1},
+{id:"c57b",jp:"夏の夜も、こちらで水分に気をつけてお休みください。",vi:"Đêm hè, xin nghỉ tại đây và chú ý uống nước.",s:"夏",stay:1},
+{id:"c58",jp:"猛暑が続いています。お帰りはどうぞご無理なさらず。",vi:"Nắng gắt vẫn tiếp tục. Trên đường về xin đừng gắng sức.",s:"猛暑",home:1},
+{id:"c59",jp:"厳しい暑さの一日でした。水分をとって、ゆっくりお休みください。",vi:"Một ngày nắng gắt. Xin uống nước và nghỉ ngơi.",s:"猛暑",home:1},
+{id:"c60",jp:"猛暑の夜も、こちらで涼しくお休みください。",vi:"Đêm nắng gắt, xin nghỉ mát tại đây.",s:"猛暑",stay:1},
+{id:"c60b",jp:"厳しい暑さの夜です。こちらで涼しくお世話いたします。",vi:"Đêm nắng gắt. Tại đây chúng tôi chăm cho mát.",s:"猛暑",stay:1},
+{id:"c61",jp:"秋の一日でした。お気をつけてお帰りください。",vi:"Một ngày thu. Xin cẩn thận trên đường về.",s:"秋",home:1},
+{id:"c62",jp:"秋の気配のなか、またのご利用を楽しみにしております。",vi:"Trong hơi thu, chúng tôi mong được đón tiếp lần sau.",s:"秋",home:1},
+{id:"c63",jp:"秋の夜は、こちらでゆっくりお休みください。",vi:"Đêm thu, xin nghỉ ngơi tại đây.",s:"秋",stay:1},
+{id:"c63b",jp:"秋の夜を、こちらでゆっくりお休みください。",vi:"Đêm thu, xin nghỉ ngơi tại đây.",s:"秋",stay:1},
+{id:"c64",jp:"寒い季節です。暖かくしてお帰りください。",vi:"Mùa lạnh. Xin giữ ấm trên đường về.",s:"冬",home:1},
+{id:"c65",jp:"冬の一日、ありがとうございました。今夜は暖かくお過ごしください。",vi:"Một ngày đông, xin cảm ơn. Tối nay xin giữ ấm.",s:"冬",home:1},
+{id:"c66",jp:"寒い夜です。こちらで暖かくお休みください。",vi:"Đêm lạnh. Xin nghỉ ấm tại đây.",s:"冬",stay:1},
+{id:"c66b",jp:"冬の夜は冷えます。こちらであたたかくお世話いたします。",vi:"Đêm đông lạnh. Tại đây chúng tôi chăm cho ấm.",s:"冬",stay:1},
+{id:"c67",jp:"「{行事}」の一日でした。またのご利用をお待ちしております。",vi:"Một ngày 「{行事}」. Mong được đón tiếp lần sau.",hol:1},
+{id:"c68",jp:"「{行事}」にあたり、本日もありがとうございました。",vi:"Nhân dịp 「{行事}」, xin cảm ơn hôm nay.",hol:1},
+{id:"c69",jp:"「{行事}」の一日、お気をつけてお帰りください。",vi:"Ngày 「{行事}」, xin cẩn thận trên đường về.",hol:1,home:1},
+{id:"c70",jp:"「{行事}」の夜は、こちらで穏やかにお過ごしください。",vi:"Đêm 「{行事}」, xin ở yên ổn tại đây.",hol:1,stay:1},
+{id:"c71",jp:"明日も通常どおりお迎えに伺います。今夜はどうぞゆっくりお休みください。",vi:"Ngày mai chúng tôi đón như thường lệ. Tối nay xin nghỉ ngơi.",tom:"通常どおりお迎え",home:1},
+{id:"c72",jp:"明日もお迎えにまいります。お帰りはお気をつけて、良い夜を。",vi:"Ngày mai chúng tôi sẽ đến đón. Xin cẩn thận trên đường về và chúc một đêm tốt.",tom:"通常どおりお迎え",home:1},
+{id:"c73",jp:"明日もお迎えに伺う予定です。今夜はこちらでゆっくりお休みください。",vi:"Ngày mai dự kiến sẽ đón. Tối nay xin nghỉ tại đây.",tom:"通常どおりお迎え",stay:1},
+{id:"c74",jp:"明日はお休みの予定です。今夜はどうぞごゆっくりなさってください。",vi:"Ngày mai dự kiến nghỉ. Tối nay xin hãy nghỉ ngơi.",tom:"お休み",home:1},
+{id:"c75",jp:"明日はご利用がありません。お帰りはお気をつけて、ゆっくりお休みください。",vi:"Ngày mai không sử dụng dịch vụ. Xin cẩn thận trên đường về và nghỉ ngơi.",tom:"お休み",home:1},
+{id:"c76",jp:"明日はお休みの予定です。今夜はこちらでゆっくりおやすみください。",vi:"Ngày mai dự kiến nghỉ. Tối nay xin ngủ ngon tại đây.",tom:"お休み",stay:1},
+{id:"c77",jp:"明日はお迎えの時間が変わります。お帰りはお気をつけて、今夜はゆっくりお休みください。",vi:"Ngày mai đổi giờ đón. Xin cẩn thận trên đường về và nghỉ ngơi tối nay.",tom:"時間変更あり",home:1},
+{id:"c78",jp:"明日はお迎えの時間が変わります。詳細は担当までお声かけください。",vi:"Ngày mai đổi giờ đón. Chi tiết xin hỏi người phụ trách.",tom:"時間変更あり",home:1},
+{id:"c79",jp:"明日はお迎えの時間が変わります。今夜はこちらでゆっくりお休みください。",vi:"Ngày mai đổi giờ đón. Tối nay xin nghỉ tại đây.",tom:"時間変更あり",stay:1},
+{id:"c80",jp:"明日は個別のご予定です。気になる点は、事業所までお声かけください。",vi:"Ngày mai có lịch riêng. Nếu băn khoăn, xin nói với cơ sở.",tom:"その他",home:1},
+{id:"c81",jp:"明日はいつもの予定と異なります。お帰りはお気をつけて。",vi:"Ngày mai khác lịch thường. Xin cẩn thận trên đường về.",tom:"その他",home:1},
+{id:"c82",jp:"明日は個別のご予定です。今夜はこちらでゆっくりお過ごしください。",vi:"Ngày mai có lịch riêng. Tối nay xin ở yên ổn tại đây.",tom:"その他",stay:1},
+{id:"c83",jp:"明日はお泊まりの予定です。今夜はこちらで安心してお過ごしください。",vi:"Ngày mai dự kiến ở lại đêm. Tối nay xin ở yên tâm tại đây.",tom:"お泊まり",stay:1},
+{id:"c84",jp:"お泊まりが続きます。今夜もあたたかくお世話いたします。",vi:"Việc ở lại đêm vẫn tiếp tục. Tối nay chúng tôi vẫn chăm sóc cho ấm.",tom:"お泊まり",stay:1},
+{id:"c85",jp:"明日からお泊まりの予定です。今夜はこちらでゆっくりお休みください。",vi:"Từ ngày mai dự kiến ở lại đêm. Tối nay xin nghỉ tại đây.",tom:"お泊まり",stay:1}
+];
+var ORDERS=[
+["wx","hol","mood","rec","meal","water","bath","exc","med","rehab","vit","app","pain","sleep","fam","tom"],
+["vit","app","pain","sleep","mood","meal","water","exc","bath","med","rehab","rec","wx","hol","fam","tom"],
+["hol","wx","rec","mood","bath","meal","water","vit","app","pain","sleep","exc","med","rehab","tom","fam"],
+["mood","vit","sleep","app","pain","meal","water","rec","bath","exc","rehab","med","hol","wx","tom","fam"],
+["wx","meal","water","exc","bath","med","mood","rec","rehab","vit","app","pain","sleep","hol","fam","tom"],
+["rec","mood","hol","wx","rehab","bath","meal","water","vit","app","pain","sleep","exc","med","tom","fam"],
+["vit","med","meal","water","exc","bath","mood","sleep","app","pain","rehab","rec","wx","hol","fam","tom"],
+["bath","exc","meal","water","med","vit","app","pain","sleep","mood","rec","rehab","wx","hol","tom","fam"],
+["hol","mood","rec","wx","meal","app","water","bath","exc","rehab","med","vit","pain","sleep","fam","tom"],
+["mood","wx","hol","rec","rehab","meal","water","bath","vit","app","pain","sleep","exc","med","fam","tom"],
+["pain","vit","sleep","app","wx","mood","rec","meal","water","rehab","bath","exc","med","hol","fam","tom"],
+["fam","hol","wx","mood","meal","water","rec","bath","exc","med","rehab","vit","app","pain","sleep","tom"]
+];
+var SESV={春:"mùa xuân",夏:"mùa hè",秋:"mùa thu",冬:"mùa đông",梅雨:"mùa mưa phùn",猛暑:"đợt nắng gắt"};
+var WXV={晴れ:"trời nắng",くもり:"trời nhiều mây",雨:"trời mưa",雪:"trời có tuyết",風が強い:"gió mạnh",蒸し暑い:"trời oi",寒い:"trời lạnh",暖かい:"trời ấm"};
+function blkSimple(val, table, v){
+  if(!val || !table[val]) return null;
+  var row=table[val], p=row[v%row.length];
+  return {jp:p[0], vi:p[1]};
+}
+function blkWx(v){
+  var ses=REN.season, wth=REN.weather;
+  if(REN.holiday && REN.holiday===ses) ses="";
+  if(!ses && !wth) return null;
+  var jp, vi;
+  if(ses && wth){
+    jp = v%2===0 ? ("季節は"+ses+"で、天気は"+wth+"でした。") : (ses+"の頃で、本日は"+wth+"でした。");
+    vi = v%2===0 ? ("Đang "+SESV[ses]+", thời tiết "+WXV[wth]+".") : ("Vào "+SESV[ses]+", hôm nay "+WXV[wth]+".");
+  } else if(wth){
+    jp = v%2===0 ? ("本日の天気は"+wth+"でした。") : ("お天気は"+wth+"でした。");
+    vi = "Thời tiết hôm nay "+WXV[wth]+".";
+  } else {
+    jp = v%2===0 ? (ses+"の季節の一日でした。") : ("季節は"+ses+"の頃です。");
+    vi = v%2===0 ? ("Một ngày của "+SESV[ses]+".") : ("Đang trong "+SESV[ses]+".");
+  }
+  return {jp:jp, vi:vi};
+}
+function blkHol(v){
+  var h=holBy(REN.holiday);
+  if(!h) return null;
+  var jp = v%2===0 ? ("「"+h[0]+"」の頃にあたり、"+h[2]+"についてお話ししました。") : ("今日は「"+h[0]+"」にちなんで、"+h[2]+"についてお話ししました。");
+  var vi = v%2===0 ? ("Đúng dịp "+h[1]+", đã nói về "+h[3]+".") : ("Hôm nay nhân dịp "+h[1]+", đã nói về "+h[3]+".");
+  return {jp:jp, vi:vi};
+}
+function blkVit(v){
+  var t=String(REN.temp||"").trim(), b=String(REN.bp||"").trim(), jp=[], vi=[];
+  if(!t && !b) return null;
+  if(t){
+    jp.push(v%2===0 ? ("体温は「"+t+"」と記録しています。") : ("体温の記録は「"+t+"」です。"));
+    vi.push("Nhiệt độ ghi 「"+t+"」.");
+  }
+  if(b){
+    jp.push(v%2===0 ? ("血圧は「"+b+"」と記録しています。") : ("血圧の記録は「"+b+"」です。"));
+    vi.push("Huyết áp ghi 「"+b+"」.");
+  }
+  return {jp:jp.join(""), vi:vi.join(" ")};
+}
+function blkPain(v){
+  var where=String(REN.painWhere||"").trim(), jp="", vi="";
+  if(!REN.pain && !where) return null;
+  if(REN.pain==="なし"){
+    jp = v%2===0 ? "痛みの訴えはありませんでした。" : "痛みについては訴えがありませんでした。";
+    vi = v%2===0 ? "Không thấy kêu đau." : "Về đau, không có lời kêu.";
+  } else if(REN.pain==="あり"){
+    jp = v%2===0 ? "痛みの訴えがありました。" : "痛みを訴える場面がありました。";
+    vi = v%2===0 ? "Có lời kêu đau." : "Có lúc kêu đau.";
+  }
+  if(where){
+    jp += "部位の記録は「"+where+"」です。";
+    vi += (vi?" ":"")+"Vị trí được ghi nguyên văn: 「"+where+"」.";
+  }
+  if(!jp) return null;
+  return {jp:jp, vi:vi};
+}
+function blkExc(v){
+  var u=REN.urine, s=REN.stool, p=REN.place, a=REN.assist;
+  if(!u && !s && !p && !a) return null;
+  var pj="", pv="", aj="", av="";
+  if(p==="トイレ"){ pj="トイレ"; pv="tại toilet"; }
+  if(p==="おむつ"){ pj="おむつ"; pv="bằng tã"; }
+  if(a==="自立"){ aj="ご自身"; av="tự làm"; }
+  if(a==="見守り"){ aj="見守り"; av="có người trông"; }
+  if(a==="一部介助"){ aj="一部介助"; av="có hỗ trợ một phần"; }
+  if(a==="全介助"){ aj="全介助"; av="có hỗ trợ toàn bộ"; }
+  var bj=[], bv=[];
+  if(u==="あり"){ bj.push("尿はありました"); bv.push("có tiểu"); }
+  if(u==="なし"){ bj.push("尿はありませんでした"); bv.push("không có tiểu"); }
+  if(u==="普通"){ bj.push("尿は普通量でした"); bv.push("tiểu mức thường"); }
+  if(s==="あり"){ bj.push("便はありました"); bv.push("có đại tiện"); }
+  if(s==="なし"){ bj.push("便はありませんでした"); bv.push("không có đại tiện"); }
+  if(s==="普通"){ bj.push("便は普通量でした"); bv.push("đại tiện mức thường"); }
+  var howJ="";
+  if(pj && aj) howJ=pj+"で、"+aj+"にて対応しました。";
+  else if(pj) howJ=pj+"で対応しました。";
+  else if(aj) howJ=aj+"で対応しました。";
+  else howJ="対応しました。";
+  var howV=[pv,av].filter(Boolean).join(", ");
+  var factJ=bj.length? bj.join("。")+"。" : "";
+  var factV="";
+  if(bv.length){ var bs=bv.join(", "); factV=bs.charAt(0).toUpperCase()+bs.slice(1)+"."; }
+  var jp="", vi="";
+  if(v%2===0){
+    jp="排泄は"+howJ+factJ;
+    vi="Bài tiết"+(howV?" "+howV:"")+"."+(factV?" "+factV:"");
+  } else {
+    jp=(factJ||"")+ (factJ? "" : "") + "排泄は"+howJ;
+    vi=(factV? factV+" " : "")+"Bài tiết"+(howV?" "+howV:"")+".";
+  }
+  return {jp:jp, vi:vi};
+}
+function withNote(base, note, jpLead, viLead){
+  if(!base && !note) return null;
+  var jp=base?base.jp:"", vi=base?base.vi:"";
+  if(note){
+    jp+=jpLead+"「"+note+"」です。";
+    vi+=(vi?" ":"")+viLead+"「"+note+"」.";
+  }
+  return {jp:jp, vi:vi};
+}
+function blkRec(v){return withNote(blkSimple(REN.rec, REC, v), String(REN.recNote||"").trim(), "活動のメモは", "Ghi chú hoạt động nguyên văn: ")}
+function blkRehab(v){return withNote(blkSimple(REN.rehab, REHAB, v), String(REN.rehabNote||"").trim(), "記録した内容は", "Nội dung ghi nguyên văn: ")}
+function blkTom(v){return withNote(blkSimple(REN.tomorrow, TOM, v), String(REN.tomorrowNote||"").trim(), "補足は", "Bổ sung nguyên văn: ")}
+function blkFam(v){
+  var t=String(REN.family||"").trim();
+  if(!t) return null;
+  if(v%2===0) return {jp:"申し送りを記載します。「"+t+"」", vi:"Ghi lời bàn giao nguyên văn: 「"+t+"」."};
+  return {jp:"あわせて、次のメモを残しています。「"+t+"」", vi:"Kèm theo ghi chú nguyên văn: 「"+t+"」."};
+}
+var BLOCKS={
+  wx:blkWx, hol:blkHol, vit:blkVit, app:function(v){return blkSimple(REN.appetite, APP, v)}, pain:blkPain,
+  sleep:function(v){return blkSimple(REN.sleep, SLEEP, v)}, mood:function(v){return blkSimple(REN.mood, MOOD, v)},
+  rec:blkRec, bath:function(v){return blkSimple(REN.bath, BATH, v)}, exc:blkExc,
+  meal:function(v){return blkSimple(REN.meal, MEAL, v)}, water:function(v){return blkSimple(REN.water, WATER, v)},
+  med:function(v){return blkSimple(REN.med, MED, v)}, rehab:blkRehab, fam:blkFam, tom:blkTom
+};
+function autoPat(uid, date){
+  var s=String(uid)+"|"+String(date), h=0, i;
+  for(i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
+  return h%12;
+}
+function buildRen(){
+  var x=byId(S.renUid);
+  if(!x || !S.renDate) return {jp:"", vi:""};
+  var pat=((Number(REN.pat)||0)%12+12)%12;
+  var v=pat%2;
+  var d=dispName(x);
+  var name=(showNames && x.name)?x.name:(showNames?"ご利用者":d.jp);
+  var nameVi=(showNames && x.name)?x.name:(showNames?"người sử dụng":d.vi);
+  var op=fillGreet(greetLine(OPEN_LINES, "open"), x);
+  var cl=fillGreet(greetLine(CLOSE_LINES, "close"), x);
+  var order=ORDERS[pat], jp=[jpDate(S.renDate)+"の連絡です。", name+"様は本日、デイサービスをご利用になりました。"], vi=["Thư liên lạc "+viDate(S.renDate)+".", nameVi+" đã sử dụng dịch vụ ban ngày hôm nay."];
+  var i, fn, b;
+  for(i=0;i<order.length;i++){
+    fn=BLOCKS[order[i]];
+    if(!fn) continue;
+    b=fn(v);
+    if(b && b.jp){ jp.push(b.jp); vi.push(b.vi); }
+  }
+  return {jp:op.jp+"\n\n"+jp.join("\n")+"\n\n"+cl.jp, vi:op.vi+"\n\n"+vi.join("\n")+"\n\n"+cl.vi};
+}
+function updatePreview(){
+  var b=buildRen(), j=$("renjp"), vv=$("renvi");
+  if(!j || !vv) return;
+  if(!b.jp){
+    j.textContent="利用者を選ぶと、ここに家族へ渡す日本語の連絡文が出ます。";
+    vv.textContent="Khi chọn người dùng, đoạn tiếng Nhật gửi gia đình hiện ở trên, và nghĩa tiếng Việt hiện ở đây.";
+    return;
+  }
+  j.textContent=b.jp;
+  vv.textContent=b.vi;
+}
+function resetRenFields(){
+  var k;
+  for(k in REN){ if(k==="pat") continue; REN[k]=""; }
+  REN.pat=autoPat(S.renUid||0, S.renDate||ds(new Date()));
+}
+function prefillFromLog(){
+  var x=byId(S.renUid); if(!x) return;
+  var i, g=null, logs=x.logs||[];
+  for(i=0;i<logs.length;i++) if(logs[i] && logs[i].d===S.renDate) g=logs[i];
+  if(!g) return;
+  if(g.bp && !REN.bp) REN.bp=String(g.bp);
+  if(g.tp!=null && g.tp!=="" && !REN.temp) REN.temp=String(g.tp);
+  if(g.bath && !REN.bath && {入浴:1,清拭:1,足浴:1,なし:1}[g.bath]) REN.bath=g.bath;
+  if(g.meal && !REN.meal){
+    var mm={全量:"全量",半分:"半分程度",少量:"少なめ"};
+    if(mm[g.meal]) REN.meal=mm[g.meal];
+  }
+}
+function onRenWho(uid){
+  if(String(uid)===String(S.renUid)) return;
+  S.renUid=uid;
+  resetRenFields();
+  prefillFromLog();
+  ren();
+}
+function onRenDate(d){
+  if(!d || d===S.renDate) return;
+  S.renDate=d;
+  resetRenFields();
+  prefillFromLog();
+  ren();
+}
+function openRen(uid, date){
+  S.renUid=uid?String(uid):"";
+  S.renDate=date||ds(new Date());
+  resetRenFields();
+  prefillFromLog();
+  S.tab="ren"; S.cur=null;
+  render();
+}
+function cyclePat(n){
+  REN.pat=((Number(REN.pat)||0)+n)%12;
+  if(REN.pat<0) REN.pat+=12;
+  updatePreview();
+  var e=$("patlab"); if(e) e.textContent=(REN.pat+1)+"/12";
+}
+function copyRen(){
+  var b=buildRen(), st=$("renstat");
+  if(!b.jp){ if(st) st.textContent="先に利用者を選んでください。 / Hãy chọn người dùng trước."; return; }
+  var ok=function(){ if($("renstat")) $("renstat").textContent="日本語だけコピーしました。 / Đã chép riêng tiếng Nhật."; };
+  var no=function(){ if($("renstat")) $("renstat").textContent="コピーできませんでした。文章を長押ししてコピーしてください。 / Không chép được. Hãy nhấn giữ đoạn văn để chép."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(b.jp).then(ok, function(){fallbackCopyText(b.jp, ok, no)});
+  else fallbackCopyText(b.jp, ok, no);
+}
+function saveRen(){
+  var st=$("renstat"), x=byId(S.renUid), b, log=null, i;
+  if(!x){ if(st) st.textContent="利用者を選んでください。 / Hãy chọn người dùng."; return; }
+  if(!S.renDate){ if(st) st.textContent="日付を選んでください。 / Hãy chọn ngày."; return; }
+  b=buildRen();
+  if(!Array.isArray(x.logs)) x.logs=[];
+  for(i=0;i<x.logs.length;i++) if(x.logs[i] && x.logs[i].d===S.renDate){ log=x.logs[i]; break; }
+  if(!log){ log={d:S.renDate, k:"日中"}; x.logs.unshift(log); }
+  log.renraku=b.jp;
+  log.renrakuVi=b.vi;
+  if(!save()){ if(st) st.textContent="保存できませんでした。 / Không lưu được."; return; }
+  if(st) st.textContent="この日の記録に保存しました。 / Đã lưu vào ghi chép của ngày này.";
+  var box=$("savedbox");
+  if(box) box.innerHTML='<h3>'+bi("保存済み","Đã lưu")+'</h3><div class="jptext">'+esc(b.jp)+'</div><div class="vitext">'+esc(b.vi)+'</div>';
+}
+function suggestHol(iso){
+  var d=pd(iso); if(isNaN(d.getTime())) return "";
+  var m=d.getMonth()+1, day=d.getDate(), w=d.getDay(), y=d.getFullYear();
+  var eq={2024:22,2025:23,2026:23,2027:23,2028:22,2029:23,2030:23,2031:23,2032:22,2033:23,2034:23,2035:23};
+  if(m===1 && day===1) return "元日";
+  if((m===12 && day>=29) || (m===1 && day<=3)) return "正月";
+  if(m===1 && w===1 && day>=8 && day<=14) return "成人の日";
+  if(m===2 && day===3) return "節分";
+  if(m===3 && day===3) return "ひな祭り";
+  if((m===3 && day>=25) || (m===4 && day<=10)) return "花見";
+  if(m===5 && day===5) return "子どもの日";
+  if(m===6) return "梅雨";
+  if(m===7 && day===7) return "七夕";
+  if(m===8 && day>=13 && day<=16) return "お盆";
+  if((m===7 && day>=20) || (m===8 && day<=25)) return "猛暑";
+  if(m===9 && w===1 && day>=15 && day<=21) return "敬老の日";
+  if(m===9 && (eq[y] ? eq[y]===day : (day===22 || day===23))) return "秋分";
+  if(m===11 && day===3) return "文化の日";
+  if(m===11 && day===15) return "七五三";
+  if(m===11) return "紅葉";
+  if(m===12 && day===25) return "クリスマス";
+  if(m===12 || m===1 || m===2) return "冬";
+  return "";
+}
+function applyHint(){
+  var h=suggestHol(S.renDate), st=$("renstat");
+  if(!h){ if(st) st.textContent="この日の決まった行事はありません。 / Không có sự kiện cố định cho ngày này."; return; }
+  REN.holiday=h;
+  var selEl=$("ren_holiday"); if(selEl) selEl.value=h;
+  updatePreview();
+  if(st) st.textContent="行事を入れました。文章は選択した内容だけを使います。 / Đã điền sự kiện. Câu chỉ dùng nội dung đã chọn.";
+}
+function rsel(key, jp, vi, opts){
+  var cur=REN[key]||"";
+  return lab(jp,vi)+'<select data-ren="'+key+'" id="ren_'+key+'">'+opts.map(function(o){
+    return '<option value="'+esc(o[0])+'"'+(o[0]===cur?" selected":"")+'>'+esc(o[1]+" / "+o[2])+'</option>';
+  }).join("")+"</select>";
+}
+function rtxt(key, jp, vi, type, ph){
+  return lab(jp,vi)+'<input type="'+(type||"text")+'" data-ren="'+key+'" value="'+esc(REN[key]||"")+'" placeholder="'+esc(ph|| (jp+" / "+vi))+'">';
+}
+function rta(key, jp, vi, ph){
+  return lab(jp,vi)+'<textarea data-ren="'+key+'" placeholder="'+esc(ph||"")+'">'+esc(REN[key]||"")+'</textarea>';
+}
+function optNone(){return ["","選ばない","Không chọn"]}
+function greetSel(key, jp, vi, lines){
+  var cur=REN[key]||"", opts=[{id:"", text:"自動（季節・天気・行事・明日の予定に合わせる） / Tự động (theo mùa, thời tiết, lễ, lịch ngày mai)"}], i, o, text;
+  for(i=0;i<lines.length;i++){
+    o=lines[i];
+    text=o.jp.split("{名}").join("〇〇").split("{行事}").join("行事")+" / "+o.vi.split("{名}").join("tên").split("{行事}").join("lễ");
+    opts.push({id:o.id, text:text});
+  }
+  return lab(jp,vi)+'<select data-ren="'+key+'" id="ren_'+key+'">'+opts.map(function(op){
+    return '<option value="'+esc(op.id)+'"'+(op.id===cur?" selected":"")+'>'+esc(op.text)+'</option>';
+  }).join("")+"</select>";
+}
+function ren(){
+  if(!S.renDate) S.renDate=ds(new Date());
+  var h=head("連絡帳","Sổ liên lạc", gear()), hint, hv, saved, i;
+  if(!S.list.length){
+    h+='<div class="card empty">'+bi("先に利用者を登録してください。","Hãy đăng ký người dùng trước.")+'</div>';
+    $("app").innerHTML=h; return;
+  }
+  h+='<div class="card preview"><h2>'+bi("家族に渡す文章","Đoạn gửi gia đình")+'</h2>';
+  h+='<p class="note">上は丁寧な日本語です。開きの挨拶、本文、締めの挨拶の順です。下はそのベトナム語です。コピーは日本語だけです。選んでいない項目は書きません。<br>Phía trên là tiếng Nhật lịch sự, theo thứ tự lời mở, nội dung, lời kết. Phía dưới là tiếng Việt. Nút chép chỉ lấy tiếng Nhật. Mục chưa chọn sẽ không được viết ra.</p>';
+  h+='<div class="bar"><button type="button" class="btn o" onclick="cyclePat(-1)">'+bi("前の文例","Mẫu trước")+'</button><span class="tag" id="patlab">'+((((Number(REN.pat)||0)%12+12)%12)+1)+'/12</span><button type="button" class="btn o" onclick="cyclePat(1)">'+bi("別の文例","Mẫu khác")+'</button></div>';
+  h+='<div id="renjp" class="jptext"></div><div id="renvi" class="vitext"></div>';
+  h+='<div class="bar"><button type="button" class="btn" onclick="copyRen()">'+bi("日本語をコピー","Chép tiếng Nhật")+'</button><button type="button" class="btn o" onclick="saveRen()">'+bi("この日の記録に保存","Lưu vào ghi chép ngày này")+'</button></div>';
+  h+='<div class="mut" id="renstat"></div><p class="note">保存すると、この利用者・この日付の記録に連絡文を上書きします。<br>Khi lưu, đoạn liên lạc của người này và ngày này sẽ bị ghi đè.</p>';
+  h+='<div id="savedbox"></div></div>';
+  h+='<div class="card"><h3>'+bi("利用者と日付","Người dùng và ngày")+'</h3>';
+  h+=lab("利用者","Người dùng")+'<select onchange="onRenWho(this.value)" aria-label="利用者 / Người dùng"><option value="">選んでください / Hãy chọn</option>';
+  for(i=0;i<S.list.length;i++) h+='<option value="'+S.list[i].id+'"'+(String(S.list[i].id)===String(S.renUid)?" selected":"")+'>'+esc(nameText(S.list[i]))+'</option>';
+  h+='</select>';
+  h+=lab("日付","Ngày")+'<input type="date" value="'+esc(S.renDate)+'" onchange="onRenDate(this.value)" aria-label="日付 / Ngày"></div>';
+  hint=suggestHol(S.renDate); hv=holBy(hint);
+  h+='<div class="card"><h3>'+bi("季節・天気・行事","Mùa, thời tiết, sự kiện")+'</h3>';
+  h+=rsel("season","季節","Mùa",[optNone(),["春","春","Xuân"],["夏","夏","Hạ"],["秋","秋","Thu"],["冬","冬","Đông"],["梅雨","梅雨","Mùa mưa phùn"],["猛暑","猛暑","Nắng gắt"]]);
+  h+=rsel("weather","天気","Thời tiết",[optNone(),["晴れ","晴れ","Nắng"],["くもり","くもり","Nhiều mây"],["雨","雨","Mưa"],["雪","雪","Tuyết"],["風が強い","風が強い","Gió mạnh"],["蒸し暑い","蒸し暑い","Oi bức"],["寒い","寒い","Lạnh"],["暖かい","暖かい","Ấm"]]);
+  h+=rsel("holiday","行事","Sự kiện",[optNone()].concat(HOL_LIST.map(function(o){return [o[0], o[0], o[1]]})));
+  h+='<p class="note">'+(hv?("この日の目安: "+esc(hint)+" / Gợi ý ngày này: "+esc(hv[1])):"この日の決まった行事はありません。 / Không có sự kiện cố định cho ngày này.")+'</p>';
+  h+='<button type="button" class="btn o" onclick="applyHint()">'+bi("目安の行事を入れる","Điền sự kiện gợi ý")+'</button></div>';
+  h+='<div class="card"><h3>'+bi("挨拶","Lời chào")+'</h3>';
+  h+='<p class="note">自動は、上の季節・天気・行事と、明日の予定（お泊まりなら帰宅の挨拶は使いません）に合う文を選びます。「別の文例」で言い回しも変わります。<br>Tự động chọn câu hợp mùa, thời tiết, lễ ở trên và lịch ngày mai (nếu ở lại đêm thì không dùng lời trên đường về). Đổi mẫu câu thì cách nói cũng đổi.</p>';
+  h+=greetSel("open","開きの挨拶","Lời mở đầu", OPEN_LINES);
+  h+=greetSel("close","締めの挨拶","Lời kết", CLOSE_LINES)+'</div>';
+  h+='<div class="card"><h3>'+bi("健康","Sức khỏe")+'</h3>';
+  h+=rsel("appetite","食欲","Cảm giác muốn ăn",[optNone(),["あり","あり","Có"],["普通","普通","Bình thường"],["少なめ","少なめ","Ít"],["なし","なし","Không thấy"]]);
+  h+='<div class="g2">'+rtxt("temp","体温","Nhiệt độ","text","例 36.5 / Ví dụ 36.5")+rtxt("bp","血圧","Huyết áp","text","例 120/80 / Ví dụ 120/80")+'</div>';
+  h+=rsel("pain","痛み","Đau",[optNone(),["なし","訴えなし","Không kêu đau"],["あり","訴えあり","Có kêu đau"]]);
+  h+=rtxt("painWhere","痛む場所（入力したときだけ記載）","Vị trí đau (chỉ ghi khi đã nhập)","text","例 右ひざ / Ví dụ gối phải");
+  h+=rsel("sleep","睡眠","Giấc ngủ",[optNone(),["良好","良好","Tốt"],["普通","普通","Bình thường"],["浅かった","浅かった","Nông"],["昼夜逆転気味","昼夜逆転気味","Lệch ngày đêm"]]);
+  h+='<p class="note">空欄の項目は文章に入れません。数値の良し悪しは自動では判断しません。<br>Mục để trống sẽ không vào câu. Ứng dụng không tự đánh giá số đo là tốt hay xấu.</p></div>';
+  h+='<div class="card"><h3>'+bi("気分と活動","Tâm trạng và hoạt động")+'</h3>';
+  h+=rsel("mood","気分","Tâm trạng",[optNone(),["穏やか","穏やか","Điềm tĩnh"],["にこやか","にこやか","Tươi"],["普通","普通","Bình thường"],["少し疲れ気味","少し疲れ気味","Hơi mệt"],["不安げ","不安げ","Có vẻ lo"],["活気があった","活気があった","Có sức sống"]]);
+  h+=rsel("rec","レクリエーション","Vui chơi",[optNone(),["体操","体操","Thể dục"],["歌唱","歌唱","Hát"],["ゲーム","ゲーム","Trò chơi"],["手芸","手芸","Thủ công"],["散歩","散歩","Đi dạo"],["会話","会話","Trò chuyện"],["脳トレ","脳トレ","Tập trí não"],["塗り絵","塗り絵","Tô tranh"],["園芸","園芸","Làm vườn"],["なし","なし","Không"]]);
+  h+=rtxt("recNote","活動のメモ","Ghi chú hoạt động");
+  h+=rsel("rehab","リハビリ・運動","Phục hồi và vận động",[optNone(),["実施した","実施した","Đã làm"],["軽めに実施","軽めに実施","Làm nhẹ"],["見合わせ","見合わせ","Tạm hoãn"],["該当なし","該当なし","Không có"]]);
+  h+=rtxt("rehabNote","運動の内容メモ","Ghi chú nội dung tập")+'</div>';
+  h+='<div class="card"><h3>'+bi("入浴","Tắm")+'</h3>'+rsel("bath","方法","Cách",[optNone(),["入浴","入浴","Tắm"],["清拭","清拭","Lau người"],["足浴","足浴","Ngâm chân"],["なし","なし","Không"]])+'</div>';
+  h+='<div class="card"><h3>'+bi("排泄","Bài tiết")+'</h3>';
+  h+='<div class="g2">'+rsel("urine","尿","Tiểu",[optNone(),["あり","あり","Có"],["なし","なし","Không"],["普通","普通量","Mức thường"]])+rsel("stool","便","Đại tiện",[optNone(),["あり","あり","Có"],["なし","なし","Không"],["普通","普通量","Mức thường"]])+'</div>';
+  h+='<div class="g2">'+rsel("place","場所","Nơi",[optNone(),["トイレ","トイレ","Toilet"],["おむつ","おむつ","Tã"]])+rsel("assist","介助","Hỗ trợ",[optNone(),["自立","自立","Tự làm"],["見守り","見守り","Có người trông"],["一部介助","一部介助","Hỗ trợ một phần"],["全介助","全介助","Hỗ trợ toàn bộ"]])+'</div></div>';
+  h+='<div class="card"><h3>'+bi("食事と水分","Ăn và nước")+'</h3>';
+  h+=rsel("meal","食事","Bữa ăn",[optNone(),["全量","全量","Hết suất"],["おおむね完食","おおむね完食","Gần hết"],["半分程度","半分程度","Khoảng nửa"],["少なめ","少なめ","Ít"],["残すことが多い","残すことが多い","Hay để lại"],["むせなく摂取","むせなく摂取","Ăn không sặc"]]);
+  h+=rsel("water","水分","Nước",[optNone(),["よく飲めた","よく飲めた","Uống tốt"],["普通","普通","Bình thường"],["少なめ","少なめ","Ít"],["促して摂取","促して摂取","Uống khi được nhắc"]])+'</div>';
+  h+='<div class="card"><h3>'+bi("服薬","Thuốc")+'</h3>'+rsel("med","服薬","Uống thuốc",[optNone(),["服用した","服用した","Đã uống"],["服用していない","服用していない","Chưa uống"],["持参なし","持参なし","Không mang thuốc"],["該当なし","該当なし","Không áp dụng"]])+'</div>';
+  h+='<div class="card"><h3>'+bi("申し送り・家族メモ","Lời bàn giao hoặc ghi chú gia đình")+'</h3>'+rta("family","原文のまま載せるメモ","Ghi chú giữ nguyên văn","家族からの連絡や申し送り。翻訳せず、原文を「」で残します。 / Lời nhắn. Giữ nguyên văn trong dấu ngoặc, không tự dịch.")+'</div>';
+  h+='<div class="card"><h3>'+bi("明日","Ngày mai")+'</h3>';
+  h+=rsel("tomorrow","予定","Dự kiến",[optNone(),["通常どおりお迎え","通常どおりお迎え","Đón như thường"],["お休み","お休み","Nghỉ"],["お泊まり","お泊まり","Ở lại đêm"],["時間変更あり","時間変更あり","Đổi giờ"],["その他","その他","Khác"]]);
+  h+=rtxt("tomorrowNote","明日の補足","Bổ sung ngày mai")+'</div>';
+  saved=null;
+  var xu=byId(S.renUid), logs=xu&&xu.logs||[], g;
+  for(i=0;i<logs.length;i++) if(logs[i] && logs[i].d===S.renDate && logs[i].renraku) saved=logs[i];
+  $("app").innerHTML=h;
+  if(saved){
+    var sb=$("savedbox");
+    if(sb) sb.innerHTML='<h3>'+bi("この日に保存済みの連絡帳","Sổ đã lưu của ngày này")+'</h3><div class="jptext">'+esc(shownNote(saved.renraku, xu, "jp"))+'</div>'+(saved.renrakuVi?'<div class="vitext">'+esc(shownNote(saved.renrakuVi, xu, "vi"))+'</div>':'');
+  }
+  updatePreview();
+}
+function onEdit(e){
+  var t=e.target;
+  if(!t || !t.dataset) return;
+  if(t.dataset.ren){
+    REN[t.dataset.ren]=t.type==="checkbox" ? (t.checked?"1":"") : t.value;
+    updatePreview();
+    return;
+  }
+  if(t.dataset.log && t.dataset.uid){
+    var xu=byId(t.dataset.uid), i=+t.dataset.i;
+    if(xu && xu.logs && xu.logs[i]){
+      xu.logs[i][t.dataset.log]=t.type==="checkbox"?t.checked:t.value;
+      save();
+    }
+    return;
+  }
+  if(t.dataset.fee && t.dataset.k){
+    var fu=byId(t.dataset.fee);
+    if(fu){
+      fu[t.dataset.k]=t.value;
+      save();
+      var month=ds(new Date()).slice(0,7);
+      var sEl=$("sub_"+fu.id);
+      if(sEl) sEl.textContent=yen(userMonthFee(fu, month));
+      var g=$("feeGrand"); if(g) g.textContent=yen(monthFees(month));
+      var gv=$("feeGrandVi"); if(gv) gv.textContent=yenVi(monthFees(month));
+    }
+    return;
+  }
+  var r=cur();
+  if(!r) return;
+  if(t.dataset.arr){
+    if(!Array.isArray(r[t.dataset.arr])) r[t.dataset.arr]=[];
+    var a=r[t.dataset.arr], ix=a.indexOf(t.dataset.v);
+    if(t.checked && ix<0) a.push(t.dataset.v);
+    if(!t.checked && ix>=0) a.splice(ix,1);
+  } else if(t.dataset.l){
+    if(!r[t.dataset.l][+t.dataset.i]) return;
+    r[t.dataset.l][+t.dataset.i][t.dataset.k]=t.type==="checkbox"?t.checked:t.value;
+  } else if(t.dataset.k){
+    r[t.dataset.k]=t.value;
+  } else return;
+  save();
+  sum(r);
+}
+function render(){
+  if(!$("app")) return;
+  if(locked){ lockScreen(); setNav(); return; }
+  if(S.tab==="users" && S.cur) detail();
+  else if(S.tab==="users") users();
+  else if(S.tab==="logs") logs();
+  else if(S.tab==="ren") ren();
+  else if(S.tab==="stay") stay();
+  else if(S.tab==="ride") ride();
+  else if(S.tab==="fee") fee();
+  else if(S.tab==="set") settings();
+  else home();
+  setNav();
+}
+document.addEventListener("input", onEdit);
+document.addEventListener("change", onEdit);
+document.addEventListener("visibilitychange", function(){ if(document.hidden && getPin()){ locked=true; render(); } });
+
+try{ S.list=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ S.list=[]; }
+if(!Array.isArray(S.list)) S.list=[];
+ORD=ordLoad();
+PLAN=plLoad();
+loadShow();
+fix();
+S.rd=ds(new Date());
+S.renDate=S.rd;
+S.logDate=S.rd;
+locked=!!getPin();
+if(!stOK()) warnSt();
+render();
+</script>
+</body>
+</html>
