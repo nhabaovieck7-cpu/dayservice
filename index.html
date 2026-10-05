@@ -103,6 +103,8 @@ label.lb{display:block;margin:10px 0 4px}
 .center{text-align:center}
 .feegrid{display:grid;grid-template-columns:1fr auto;gap:4px 8px;font-size:14px}
 .tot{font-size:20px;font-weight:800;margin-top:8px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.stack .btn{width:100%;min-height:52px}
 
 .sw{-webkit-appearance:none;appearance:none;display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:64px;margin:0;padding:14px 16px;border:0;border-radius:22px;background:#fff;box-shadow:var(--sh);text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .sw .track{width:56px;height:32px;border-radius:999px;background:#c5ced6;position:relative;flex:0 0 auto}
@@ -148,7 +150,6 @@ var ORD={}, PLAN={};
 function $(i){return document.getElementById(i)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function bi(jp,vi){return '<span class="bi"><span class="jp">'+jp+'</span><span class="vi">'+vi+'</span></span>'}
-function cloudSched(){}
 function ds(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 function pd(x){return new Date(String(x).slice(0,10)+"T00:00:00")}
 function wi(d){return (d.getDay()+6)%7}
@@ -196,13 +197,23 @@ function warnSt(){
 }
 function stOK(){try{localStorage.setItem("kg_t","1"); var r=localStorage.getItem("kg_t")==="1"; localStorage.removeItem("kg_t"); return r}catch(e){return false}}
 function save(){
-  try{ localStorage.setItem(KEY, JSON.stringify(S.list)); return true; }
+  try{ localStorage.setItem(KEY, JSON.stringify(S.list)); }
   catch(e){ warnSt(); return false; }
+  touchLocal();
+  return true;
 }
 function ordLoad(){try{var o=JSON.parse(localStorage.getItem("kaigo_ord")||"{}"); return o&&typeof o==="object"?o:{}}catch(e){return {}}}
-function ordSave(){try{localStorage.setItem("kaigo_ord", JSON.stringify(ORD))}catch(e){}}
+function ordSave(){
+  try{ localStorage.setItem("kaigo_ord", JSON.stringify(ORD)); }
+  catch(e){ return; }
+  touchLocal();
+}
 function plLoad(){try{var o=JSON.parse(localStorage.getItem("kaigo_plan")||"{}"); return o&&typeof o==="object"?o:{}}catch(e){return {}}}
-function plSave(){try{localStorage.setItem("kaigo_plan", JSON.stringify(PLAN))}catch(e){}}
+function plSave(){
+  try{ localStorage.setItem("kaigo_plan", JSON.stringify(PLAN)); }
+  catch(e){ return; }
+  touchLocal();
+}
 
 var SHOW_KEY="kaigo_shownames";
 var showNames=false;
@@ -1035,6 +1046,565 @@ function fee(){
   }
   $("app").innerHTML=h;
 }
+var SYNC_BIN_KEY="kaigo_sync_bin", SYNC_SECRET_KEY="kaigo_sync_key", SYNC_BASE_KEY="kaigo_sync_base";
+var SYNC_KNOWN_KEY="kaigo_sync_known", SYNC_LOCAL_KEY="kaigo_sync_local", SYNC_LAST_KEY="kaigo_sync_last";
+var syncTimer=0, syncBootTimer=0, syncBusy=false, syncing=false, syncPending=false, syncHold=false;
+var syncKeyMode="", syncErr="", syncLast=null, syncConflict=null, syncWipeArm=0, syncCheckedAt=0, syncPauseUntil=0;
+function lsGet(k){try{return localStorage.getItem(k)||""}catch(e){return ""}}
+function getLocalAt(){return lsGet(SYNC_LOCAL_KEY)}
+function getKnown(){return lsGet(SYNC_KNOWN_KEY)}
+function timeMs(s){var t=Date.parse(s||""); return isNaN(t)?0:t}
+function syncWhen(iso){
+  var d=new Date(iso), p;
+  if(isNaN(d.getTime())) return "";
+  p=function(n){return (n<10?"0":"")+n};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
+}
+function normBin(v){
+  var compact, m;
+  v=String(v||"").trim();
+  compact=v.replace(/\s+/g,"");
+  if(compact.length>24){
+    m=compact.match(/[a-fA-F0-9]{24}/);
+    if(m) return m[0].toLowerCase();
+  }
+  return compact.toLowerCase();
+}
+function safeBase(b){
+  var u, path;
+  try{
+    u=new URL(b);
+    if(u.protocol!=="https:" || u.username || u.password) return "";
+    path=u.pathname.replace(/\/+$/,"");
+    return u.origin+path;
+  }catch(e){ return ""; }
+}
+function syncCfg(){
+  var bin="", key="", baseIn="", base="";
+  try{
+    bin=normBin(localStorage.getItem(SYNC_BIN_KEY)||"");
+    key=String(localStorage.getItem(SYNC_SECRET_KEY)||"").trim();
+    baseIn=String(localStorage.getItem(SYNC_BASE_KEY)||"").trim();
+  }catch(e){}
+  base=baseIn?safeBase(baseIn):"https://api.jsonbin.io/v3";
+  return {bin:bin, key:key, base:base, binOk:/^[a-f0-9]{24}$/.test(bin)};
+}
+function syncReady(){var c=syncCfg(); return !!(c.binOk && c.key && c.base)}
+function countDays(obj){
+  var n=0, k;
+  if(!obj || typeof obj!=="object" || Array.isArray(obj)) return 0;
+  for(k in obj) if(Object.prototype.hasOwnProperty.call(obj, k)) n++;
+  return n;
+}
+function ordHas(obj){
+  var k, v;
+  if(!obj || typeof obj!=="object" || Array.isArray(obj)) return false;
+  for(k in obj) if(Object.prototype.hasOwnProperty.call(obj, k)){
+    v=obj[k];
+    if(Array.isArray(v)?v.length:(v && typeof v==="object")) return true;
+  }
+  return false;
+}
+function localHasData(){return !!((S.list && S.list.length) || countDays(PLAN) || ordHas(ORD))}
+function localDirty(){return timeMs(getLocalAt())>timeMs(getKnown())}
+function remoteInfo(rec){
+  var info={blank:true, has:false, at:"", people:0, days:0, backup:false};
+  if(!rec || typeof rec!=="object" || Array.isArray(rec)) return info;
+  info.people=Array.isArray(rec.list)?rec.list.length:0;
+  info.days=countDays(rec.plan);
+  info.backup=Array.isArray(rec.list) || rec.v===2 || !!rec.schemaVersion || typeof rec.syncedAt==="string";
+  info.at=typeof rec.syncedAt==="string"?rec.syncedAt:"";
+  info.has=info.people>0 || info.days>0 || ordHas(rec.ord);
+  info.blank=!info.has;
+  return info;
+}
+function unwrapBin(data){
+  if(!data || typeof data!=="object" || Array.isArray(data)) return {};
+  if(Object.prototype.hasOwnProperty.call(data, "record")){
+    if(!data.record || typeof data.record!=="object" || Array.isArray(data.record)) return {};
+    return data.record;
+  }
+  return data;
+}
+function stablePayload(o){
+  o=o||{};
+  return JSON.stringify({
+    v:2,
+    list:o.list||[],
+    plan:o.plan && typeof o.plan==="object" && !Array.isArray(o.plan)?o.plan:{},
+    ord:o.ord && typeof o.ord==="object" && !Array.isArray(o.ord)?o.ord:{}
+  });
+}
+function syncSnapshot(stamp){return {schemaVersion:1, syncedAt:stamp, v:2, list:S.list, plan:PLAN, ord:ORD}}
+function currentSyncState(info, same){
+  return {
+    localHas:localHasData(),
+    localAt:getLocalAt(),
+    known:getKnown(),
+    remoteBlank:!info || !!info.blank,
+    remoteHas:!!(info && info.has),
+    remoteAt:info && info.at || "",
+    same:!!same
+  };
+}
+function syncDecide(st){
+  var dirty;
+  if(st.same) return "align";
+  if(!st.localHas){
+    if(st.remoteHas) return "pull";
+    return "skip";
+  }
+  if(st.remoteBlank || !timeMs(st.remoteAt)) return "push";
+  if(!timeMs(st.known)){
+    if(timeMs(st.localAt) && timeMs(st.remoteAt)<timeMs(st.localAt)) return "push";
+    if(timeMs(st.localAt) && timeMs(st.localAt)===timeMs(st.remoteAt)) return "align";
+    return "ask";
+  }
+  dirty=timeMs(st.localAt)>timeMs(st.known);
+  if(timeMs(st.remoteAt)===timeMs(st.known) && !dirty) return "skip";
+  if(timeMs(st.localAt) && timeMs(st.remoteAt)===timeMs(st.localAt)) return "align";
+  if(dirty && timeMs(st.remoteAt)>timeMs(st.known)) return "ask";
+  if(timeMs(st.remoteAt)>timeMs(st.known) && !dirty) return "pull";
+  if(dirty || timeMs(st.remoteAt)<timeMs(st.known)) return "push";
+  return "skip";
+}
+function pullAllowed(rec){
+  var info=remoteInfo(rec), known=getKnown(), localAt=getLocalAt();
+  if(!localHasData()) return !!info.has;
+  if(!timeMs(known)) return false;
+  if(!(timeMs(info.at)>timeMs(known))) return false;
+  if(timeMs(localAt)>timeMs(known)) return false;
+  return true;
+}
+function syncStatusText(){
+  var c=syncCfg(), label, n;
+  if(!c.bin && !c.key) return "自動同期はオフです。Bin IDとキーを入れると始まります。 / Tự động đồng bộ đang tắt. Nhập Bin ID và khóa để bắt đầu.";
+  if(!c.bin || !c.key) return "Bin IDとキーの両方が必要です。同期はオフです。 / Cần cả Bin ID và khóa. Đồng bộ đang tắt.";
+  if(!c.binOk) return "Bin IDを確認してください。同期はオフです。 / Hãy kiểm tra Bin ID. Đồng bộ đang tắt.";
+  if(!c.base) return "APIのアドレスを確認してください。 / Hãy kiểm tra địa chỉ API.";
+  if(syncing) return "同期中… / Đang đồng bộ…";
+  if(syncConflict) return "確認が必要です。上書きせず待っています。 / Cần xác nhận. Đang chờ, không ghi đè.";
+  if(syncErr) return syncErr;
+  if(syncLast && syncLast.at){
+    label=syncLast.kind==="pull"?"受信 / Đã nhận":(syncLast.kind==="push"?"送信 / Đã gửi":"確認 / Đã kiểm tra");
+    n=syncLast.n!=null?(" ("+syncLast.n+"人 / "+syncLast.n+" người)"):"";
+    return "最終同期 "+label+n+" "+syncWhen(syncLast.at);
+  }
+  return "まだ同期していません。 / Chưa đồng bộ.";
+}
+function paintSyncStatus(){var e=$("syncst"); if(e) e.textContent=syncStatusText()}
+function paintSyncBanner(){
+  var old=$("syncAsk"), app, d, c, localLine, remoteLine;
+  if(old && old.parentNode) old.parentNode.removeChild(old);
+  if(locked || !syncConflict) return;
+  app=$("app");
+  if(!app) return;
+  c=syncConflict;
+  localLine="この端末 / Máy này: "+c.localN+"人 / "+c.localN+" người"+(c.localDays?(" ・ 個別日 "+c.localDays+" / "+c.localDays+" ngày riêng"):"");
+  remoteLine="クラウド / Đám mây: "+c.remoteN+"人 / "+c.remoteN+" người"+(c.remoteDays?(" ・ 個別日 "+c.remoteDays+" / "+c.remoteDays+" ngày riêng"):"");
+  if(c.remoteAt) remoteLine+=" ・ "+syncWhen(c.remoteAt);
+  d=document.createElement("div");
+  d.id="syncAsk";
+  d.className="card";
+  d.innerHTML='<h2>'+bi("同期の確認","Xác nhận đồng bộ")+'</h2>'
+    +'<p class="note">'+bi("この端末とクラウドの両方にデータがあります。確認するまで上書きしません。","Cả máy này và đám mây đều có dữ liệu. Không ghi đè cho đến khi bạn xác nhận.")+'</p>'
+    +'<p class="note">'+esc(localLine)+'<br>'+esc(remoteLine)+'</p>'
+    +'<div class="stack"><button type="button" class="btn" onclick="syncKeepLocal()">'+bi("この端末のデータを残して送る","Giữ dữ liệu máy này và đẩy lên")+'</button>'
+    +'<button type="button" class="btn d" id="syncUseBtn" onclick="syncUseRemote()">'+bi("クラウドのデータに入れ替える","Đổi sang dữ liệu đám mây")+'</button></div>';
+  app.insertBefore(d, app.firstChild);
+}
+function setSyncLast(kind, at, n){
+  syncLast={kind:kind, at:at, n:n};
+  try{ localStorage.setItem(SYNC_LAST_KEY, JSON.stringify(syncLast)); }catch(e){}
+}
+function loadSyncLast(){
+  try{
+    var o=JSON.parse(localStorage.getItem(SYNC_LAST_KEY)||"null");
+    if(o && typeof o==="object" && o.at) syncLast=o;
+  }catch(e){ syncLast=null; }
+}
+function markSynced(iso, forceLocal){
+  var localAt=getLocalAt();
+  try{ localStorage.setItem(SYNC_KNOWN_KEY, iso); }catch(e){}
+  if(forceLocal || !timeMs(localAt) || timeMs(localAt)<=timeMs(iso)){
+    try{ localStorage.setItem(SYNC_LOCAL_KEY, iso); }catch(e){}
+  }
+}
+function touchLocal(){
+  var t;
+  if(syncHold) return;
+  t=new Date().toISOString();
+  try{ localStorage.setItem(SYNC_LOCAL_KEY, t); }catch(e){}
+  syncPending=true;
+  cloudSched();
+}
+function cloudSched(){
+  if(syncConflict || !syncReady()) return;
+  if(syncTimer) clearTimeout(syncTimer);
+  syncTimer=setTimeout(function(){ syncTimer=0; runSync("save"); }, 1500);
+}
+function syncField(el){
+  var v, n, k, b;
+  if(!el) return;
+  v=String(el.value||"");
+  try{
+    if(el.id==="syncBin"){
+      n=normBin(v);
+      localStorage.setItem(SYNC_BIN_KEY, n);
+      if(n!==v && v.length>24) el.value=n;
+    } else if(el.id==="syncKey"){
+      k=v.trim();
+      if(k) localStorage.setItem(SYNC_SECRET_KEY, k);
+      else localStorage.removeItem(SYNC_SECRET_KEY);
+    } else if(el.id==="syncBase"){
+      b=v.trim();
+      if(b) localStorage.setItem(SYNC_BASE_KEY, b);
+      else localStorage.removeItem(SYNC_BASE_KEY);
+    }
+  }catch(e){
+    syncErr="この端末に保存できません。 / Máy này không lưu được.";
+    paintSyncStatus();
+    return;
+  }
+  syncKeyMode="";
+  syncPauseUntil=0;
+  syncErr="";
+  syncConflict=null;
+  syncWipeArm=0;
+  if(syncTimer){ clearTimeout(syncTimer); syncTimer=0; }
+  paintSyncBanner();
+  paintSyncStatus();
+  if(syncBootTimer) clearTimeout(syncBootTimer);
+  syncBootTimer=setTimeout(function(){ syncBootTimer=0; runSync("cred"); }, 700);
+}
+function syncErrFrom(res){
+  var msg="", low="";
+  if(res && res.data && res.data.message) msg=String(res.data.message);
+  low=msg.toLowerCase();
+  if(!res || !res.status) return "通信できません。 / Không kết nối được.";
+  if(res.status===401 || res.status===403) return "キーが違います。 / Sai khóa.";
+  if(res.status===404 || low.indexOf("not found")>=0 || low.indexOf("invalid bin")>=0) return "Bin が見つかりません。 / Không thấy bin.";
+  if(res.status===413 || low.indexOf("100kb")>=0 || low.indexOf("too large")>=0) return "データが大きすぎます。下のファイル保存を使ってください。 / Dữ liệu quá lớn. Hãy dùng lưu tệp bên dưới.";
+  if(res.status===429 || low.indexOf("exhausted")>=0) return "JSONBin の回数上限です。少し待ってください。 / Hết lượt gọi JSONBin. Hãy đợi một lúc.";
+  return "同期できません（"+res.status+"）。 / Không đồng bộ được ("+res.status+").";
+}
+function fetchTimeout(url, opt, ms){
+  return new Promise(function(resolve, reject){
+    var done=false, timer, p;
+    timer=setTimeout(function(){ if(done) return; done=true; reject(new Error("timeout")); }, ms||30000);
+    try{ p=fetch(url, opt); }
+    catch(e){ if(!done){ done=true; clearTimeout(timer); } reject(e); return; }
+    p.then(function(res){
+      if(done) return;
+      done=true;
+      clearTimeout(timer);
+      resolve(res);
+    }, function(err){
+      if(done) return;
+      done=true;
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
+}
+function syncRequest(method, path, body, mode, keepalive){
+  var c=syncCfg(), headers={"Accept":"application/json"}, opt;
+  if(mode==="access") headers["X-Access-Key"]=c.key;
+  else headers["X-Master-Key"]=c.key;
+  opt={method:method, headers:headers, cache:"no-store", credentials:"omit", mode:"cors", referrerPolicy:"no-referrer"};
+  if(keepalive) opt.keepalive=true;
+  if(body!=null){
+    headers["Content-Type"]="application/json";
+    headers["X-Bin-Versioning"]="false";
+    opt.body=JSON.stringify(body);
+  }
+  return fetchTimeout(c.base+path, opt, 30000).then(function(res){
+    return res.text().then(function(text){
+      var data=null;
+      try{ data=text?JSON.parse(text):null; }catch(e){ data=null; }
+      return {ok:res.ok, status:res.status, data:data};
+    });
+  });
+}
+function syncCall(method, path, body, keepalive){
+  var first=syncKeyMode||"master";
+  return syncRequest(method, path, body, first, keepalive).then(function(r){
+    var second;
+    if(r.ok){ syncKeyMode=first; return r; }
+    if((r.status===401 || r.status===403) && !syncKeyMode){
+      second=first==="master"?"access":"master";
+      return syncRequest(method, path, body, second, keepalive).then(function(r2){
+        if(r2.ok) syncKeyMode=second;
+        return r2.ok?r2:r;
+      });
+    }
+    return r;
+  });
+}
+function syncGet(){
+  var id=encodeURIComponent(syncCfg().bin);
+  return syncCall("GET", "/b/"+id+"/latest").then(function(r){
+    var msg=r && r.data && r.data.message ? String(r.data.message) : "";
+    if(r.status===404 || /version/i.test(msg)) return syncCall("GET", "/b/"+id);
+    return r;
+  });
+}
+function syncFinish(){
+  syncBusy=false;
+  syncing=false;
+  paintSyncStatus();
+  if(syncConflict || !syncPending || !syncReady()) return;
+  syncPending=false;
+  if(syncTimer) clearTimeout(syncTimer);
+  syncTimer=setTimeout(function(){ syncTimer=0; runSync("save"); }, 1500);
+}
+function askConflict(rec, info){
+  syncConflict={
+    rec:rec,
+    localN:(S.list && S.list.length) || 0,
+    remoteN:info.people||0,
+    remoteAt:info.at||"",
+    localDays:countDays(PLAN),
+    remoteDays:info.days||0
+  };
+  syncBusy=false;
+  syncing=false;
+  syncErr="";
+  paintSyncStatus();
+  paintSyncBanner();
+}
+function writeAll(list, plan, ord){
+  var prevL=null, prevP=null, prevO=null, hadL=false, hadP=false, hadO=false;
+  try{ prevL=localStorage.getItem(KEY); hadL=true; }catch(e){}
+  try{ prevP=localStorage.getItem("kaigo_plan"); hadP=true; }catch(e){}
+  try{ prevO=localStorage.getItem("kaigo_ord"); hadO=true; }catch(e){}
+  try{
+    localStorage.setItem(KEY, JSON.stringify(list));
+    localStorage.setItem("kaigo_plan", JSON.stringify(plan));
+    localStorage.setItem("kaigo_ord", JSON.stringify(ord));
+    return true;
+  }catch(e){
+    try{ if(hadL){ if(prevL==null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, prevL); } }catch(x){}
+    try{ if(hadP){ if(prevP==null) localStorage.removeItem("kaigo_plan"); else localStorage.setItem("kaigo_plan", prevP); } }catch(x){}
+    try{ if(hadO){ if(prevO==null) localStorage.removeItem("kaigo_ord"); else localStorage.setItem("kaigo_ord", prevO); } }catch(x){}
+    warnSt();
+    return false;
+  }
+}
+function applyBackupObject(v, opt){
+  var asArray, L, prevList, prevPlan, prevOrd, nextPlan, nextOrd, ok=false, n=0;
+  opt=opt||{};
+  asArray=Array.isArray(v);
+  L=asArray?v:(v&&v.list);
+  if(!Array.isArray(L)) return null;
+  prevList=S.list;
+  prevPlan=PLAN;
+  prevOrd=ORD;
+  nextPlan=PLAN;
+  nextOrd=ORD;
+  if(!asArray){
+    nextPlan=v.plan && typeof v.plan==="object" && !Array.isArray(v.plan)?v.plan:{};
+    nextOrd=v.ord && typeof v.ord==="object" && !Array.isArray(v.ord)?v.ord:{};
+  }
+  syncHold=true;
+  try{
+    S.list=L;
+    PLAN=nextPlan;
+    ORD=nextOrd;
+    fix();
+    n=S.list.length;
+    ok=writeAll(S.list, PLAN, ORD);
+  }catch(e){
+    ok=false;
+  }finally{
+    syncHold=false;
+  }
+  if(!ok){
+    S.list=prevList;
+    PLAN=prevPlan;
+    ORD=prevOrd;
+    return {ok:false, n:n};
+  }
+  if(!opt.silent) touchLocal();
+  return {ok:true, n:n};
+}
+function doPush(opt){
+  var stamp, body, n;
+  opt=opt||{};
+  if(!syncReady() || syncConflict){
+    syncBusy=false;
+    syncing=false;
+    paintSyncStatus();
+    return;
+  }
+  stamp=new Date().toISOString();
+  try{ body=syncSnapshot(stamp); }
+  catch(e){
+    syncErr="データを準備できません。 / Không chuẩn bị được dữ liệu.";
+    syncBusy=false;
+    syncing=false;
+    paintSyncStatus();
+    return;
+  }
+  n=S.list.length;
+  syncBusy=true;
+  syncing=true;
+  syncPending=false;
+  syncErr="";
+  paintSyncStatus();
+  syncCall("PUT", "/b/"+encodeURIComponent(syncCfg().bin), body, !!opt.keepalive).then(function(res){
+    if(!res.ok){
+      if(res.status===401 || res.status===403) syncPauseUntil=Date.now()+60000;
+      syncErr=syncErrFrom(res);
+      return syncFinish();
+    }
+    markSynced(stamp, false);
+    setSyncLast("push", stamp, n);
+    syncErr="";
+    return syncFinish();
+  }).catch(function(){
+    syncErr="通信できません。 / Không kết nối được.";
+    syncFinish();
+  });
+}
+function doPull(rec, force){
+  var info=remoteInfo(rec), applied=null;
+  if(!force && !pullAllowed(rec)){
+    syncBusy=false;
+    syncing=false;
+    if(localHasData()){
+      if(info.has && timeMs(info.at)) return askConflict(rec, info);
+      return doPush();
+    }
+    syncErr="クラウドから取り込めませんでした。 / Chưa nhận được dữ liệu mây.";
+    paintSyncStatus();
+    return;
+  }
+  try{ applied=applyBackupObject(rec, {silent:true}); }
+  catch(e){ applied=null; }
+  if(!applied){
+    syncErr="クラウドの形式を読めません。この端末はそのままです。 / Không đọc được dữ liệu mây. Máy này giữ nguyên.";
+    return syncFinish();
+  }
+  if(!applied.ok){
+    syncErr="この端末に保存しきれません。データは残しています。 / Máy không lưu hết được. Dữ liệu máy vẫn còn.";
+    return syncFinish();
+  }
+  if(syncTimer){ clearTimeout(syncTimer); syncTimer=0; }
+  syncPending=false;
+  markSynced(info.at || new Date().toISOString(), true);
+  setSyncLast("pull", info.at || new Date().toISOString(), applied.n);
+  syncErr="";
+  syncConflict=null;
+  syncBusy=false;
+  syncing=false;
+  if(!locked) render();
+  paintSyncStatus();
+}
+function doReconcile(){
+  if(!syncReady() || syncConflict) return;
+  syncBusy=true;
+  syncing=true;
+  syncErr="";
+  paintSyncStatus();
+  syncGet().then(function(res){
+    var rec, info, same, act, again;
+    syncCheckedAt=Date.now();
+    if(!res.ok){
+      if(res.status===401 || res.status===403) syncPauseUntil=Date.now()+60000;
+      syncErr=syncErrFrom(res);
+      return syncFinish();
+    }
+    rec=unwrapBin(res.data);
+    info=remoteInfo(rec);
+    same=false;
+    try{ same=stablePayload(rec)===stablePayload({list:S.list, plan:PLAN, ord:ORD}); }
+    catch(e){ same=false; }
+    act=syncDecide(currentSyncState(info, same));
+    if(act==="align"){
+      markSynced(info.at || getLocalAt() || new Date().toISOString(), true);
+      if(!syncLast) setSyncLast("same", info.at || new Date().toISOString(), S.list.length);
+      syncErr="";
+      return syncFinish();
+    }
+    if(act==="skip"){
+      syncErr="";
+      return syncFinish();
+    }
+    if(act==="ask") return askConflict(rec, info);
+    if(act==="pull"){
+      again=syncDecide(currentSyncState(info, false));
+      if(again!=="pull"){
+        if(again==="ask") return askConflict(rec, info);
+        if(again==="push"){ syncBusy=false; syncing=false; return doPush(); }
+        return syncFinish();
+      }
+      syncBusy=false;
+      syncing=false;
+      return doPull(rec, false);
+    }
+    if(act==="push"){
+      syncBusy=false;
+      syncing=false;
+      return doPush();
+    }
+    return syncFinish();
+  }).catch(function(){
+    syncErr="通信できません。 / Không kết nối được.";
+    syncFinish();
+  });
+}
+function runSync(reason){
+  if(reason==="open" && Date.now()<syncPauseUntil){
+    paintSyncStatus();
+    return;
+  }
+  if(!syncReady()){
+    syncErr="";
+    syncing=false;
+    paintSyncStatus();
+    return;
+  }
+  if(syncConflict) return;
+  if(syncBusy){
+    if(reason==="save" || reason==="flush") syncPending=true;
+    return;
+  }
+  if(reason==="open" && !localDirty() && syncCheckedAt && (Date.now()-syncCheckedAt<4000)) return;
+  if(reason==="save" || reason==="flush") doPush({keepalive:reason==="flush"});
+  else doReconcile();
+}
+function flushSync(){
+  var keep=false;
+  if(syncBootTimer){ clearTimeout(syncBootTimer); syncBootTimer=0; }
+  if(syncConflict || !syncReady() || syncBusy) return;
+  if(!syncPending && !syncTimer && !localDirty()) return;
+  if(syncTimer){ clearTimeout(syncTimer); syncTimer=0; }
+  try{ keep=JSON.stringify(syncSnapshot("x")).length<=50000; }catch(e){ keep=false; }
+  runSync(keep?"flush":"save");
+}
+function syncKeepLocal(){
+  var old;
+  syncConflict=null;
+  syncWipeArm=0;
+  old=$("syncAsk");
+  if(old && old.parentNode) old.parentNode.removeChild(old);
+  doPush();
+}
+function syncUseRemote(){
+  var b, rec;
+  if(!syncConflict || !syncConflict.rec) return;
+  if(!syncWipeArm){
+    syncWipeArm=1;
+    b=$("syncUseBtn");
+    if(b) b.innerHTML=bi("もう一度押すとこの端末を上書きします","Bấm lần nữa để ghi đè máy này");
+    return;
+  }
+  rec=syncConflict.rec;
+  syncConflict=null;
+  syncWipeArm=0;
+  doPull(rec, true);
+}
 function bkText(){return JSON.stringify({v:2, list:S.list, plan:PLAN, ord:ORD})}
 function bkMsg(m){var e=$("bkm"); if(e) e.textContent=m}
 function bkMake(){
@@ -1084,20 +1654,14 @@ function bkFile(input){
   rd.readAsText(f);
 }
 function bkLoad(){
-  var b=$("rcb");
+  var b=$("rcb"), r=null, bad=false;
   if(!S.rc){ S.rc=1; if(b) b.innerHTML=bi("もう一度押すと上書き復元します","Bấm lần nữa để khôi phục và ghi đè"); return; }
   S.rc=0;
-  try{
-    var raw=$("bk")?$("bk").value:"", v=JSON.parse(raw), L=Array.isArray(v)?v:v.list;
-    if(!Array.isArray(L)) throw 0;
-    S.list=L;
-    if(!Array.isArray(v)){ PLAN=v.plan && typeof v.plan==="object"?v.plan:{}; ORD=v.ord && typeof v.ord==="object"?v.ord:{}; plSave(); ordSave(); }
-    fix();
-    if(!save()) bkMsg("端末に保存しきれませんでした。 / Không lưu hết được vào máy.");
-    else bkMsg("復元しました（"+L.length+"人）。 / Đã khôi phục ("+L.length+" người).");
-  }catch(x){
-    bkMsg("読めません。全文を貼ってください。 / Không đọc được. Hãy dán đủ toàn bộ chữ.");
-  }
+  try{ r=applyBackupObject(JSON.parse($("bk")?$("bk").value:"")); }
+  catch(x){ bad=true; }
+  if(bad || !r) bkMsg("読めません。全文を貼ってください。 / Không đọc được. Hãy dán đủ toàn bộ chữ.");
+  else if(!r.ok) bkMsg("端末に保存しきれませんでした。 / Không lưu hết được vào máy.");
+  else bkMsg("復元しました（"+r.n+"人）。 / Đã khôi phục ("+r.n+" người).");
   b=$("rcb"); if(b) b.innerHTML=bi("上の内容から復元","Khôi phục từ ô trên");
 }
 function settings(){
@@ -1106,7 +1670,16 @@ function settings(){
   h+=msgBox();
   h+='<div class="card"><h2>'+bi("名前の表示","Hiện tên")+'</h2>'+nameSwitch();
   h+='<p class="note">オフのときは、ホーム・利用者・送迎・お泊まり・記録・連絡帳・費用の一覧で名前を隠します。連絡帳の日本語に本名が出るのも、オンのときだけです。台帳の編集画面では、オフでも本名を編集できます。設定は kaigo_shownames に保存します。<br>Khi tắt, tên bị ẩn ở trang chủ, danh sách, đưa đón, trọ lại, ghi chép, sổ liên lạc và chi phí. Tên thật trong sổ liên lạc tiếng Nhật chỉ hiện khi bật. Trong màn sửa hồ sơ vẫn sửa được tên thật khi tắt. Lưu ở khóa kaigo_shownames.</p></div>';
-  h+='<div class="card"><h2>'+bi("バックアップ","Sao lưu")+'</h2><p class="note">利用者、薬、連絡先、記録、送迎の個別日、順番、計画書の文章と添付を含みます。健康情報が入るので、施設が許す場所だけに保管してください。<br>Gồm người dùng, thuốc, liên hệ, ghi chép, ngày đưa đón đã sửa, thứ tự, nội dung và tệp kế hoạch. Có thông tin sức khỏe, chỉ giữ ở nơi cơ sở cho phép.</p>';
+  h+='<div class="card"><h2>'+bi("自動同期","Đồng bộ tự động")+'</h2>';
+  h+='<p class="note">iPhone とパソコンで同じページを開き、Bin ID とキーをそれぞれの端末に一度だけ貼ります。保存するたびに自動で送り、ページを開いたときクラウドの方が新しければ受け取ります。<br>Mở cùng một trang trên iPhone và máy tính, dán Bin ID và khóa một lần trên mỗi máy. Mỗi lần lưu sẽ tự gửi. Khi mở trang, nếu đám mây mới hơn thì tự nhận.</p>';
+  h+='<div class="warn">Bin ID とキーは共有しないでください。両方を知っている人は、利用者の健康情報をすべて読んだり変更したりできます。キーはこの端末だけに保存します。GitHub や公開の dayservice には置きません。<br>Đừng chia sẻ Bin ID và khóa. Ai có cả hai sẽ đọc và sửa được toàn bộ thông tin sức khỏe. Khóa chỉ lưu trên máy này. Không đưa lên GitHub hay kho dayservice công khai.</div>';
+  h+='<p class="note">手順: JSONBin で無料アカウントを作る → Private のビンを1つ作る → Bin ID と Master Key（または Access Key）をコピー → 電話とパソコンに貼る。この端末にデータがあるとき、空のビンや古いビンでは上書きしません。先にこの端末の内容を送ります。両方に別のデータがあるときは、確認するまで止めます。<br>Cách làm: tạo tài khoản JSONBin miễn phí → tạo một bin Private → chép Bin ID và Master Key (hoặc Access Key) → dán trên điện thoại và máy tính. Nếu máy này đang có dữ liệu, bin trống hoặc bin cũ không ghi đè. Máy này được gửi lên trước. Nếu hai bên khác nhau, sẽ hỏi trước khi thay.</p>';
+  h+='<p class="note">送る先は、あなた自身の非公開ビンだけです。無料枠はおおよそ100KBです。写真が多いと送れないことがあります。そのときは下のファイル保存を使ってください。<br>Chỉ gửi lên bin riêng của bạn. Gói miễn phí khoảng 100KB. Nhiều ảnh có thể không gửi được. Khi đó hãy dùng phần lưu tệp bên dưới.</p>';
+  h+=lab("Bin ID","Bin ID")+'<input id="syncBin" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(lsGet(SYNC_BIN_KEY))+'" placeholder="Bin ID" oninput="syncField(this)" aria-label="Bin ID">';
+  h+=lab("アクセスキー","Khóa truy cập")+'<input id="syncKey" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(lsGet(SYNC_SECRET_KEY))+'" placeholder="Master Key または Access Key / Master Key hoặc Access Key" oninput="syncField(this)" aria-label="Master Key または Access Key">';
+  h+=lab("APIアドレス（任意）","Địa chỉ API (không bắt buộc)")+'<input id="syncBase" type="url" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(lsGet(SYNC_BASE_KEY))+'" placeholder="https://api.jsonbin.io/v3" oninput="syncField(this)" aria-label="API">';
+  h+='<div class="mut" id="syncst">'+esc(syncStatusText())+'</div></div>';
+  h+='<div class="card"><h2>'+bi("バックアップ","Sao lưu")+'</h2><p class="note">利用者、薬、連絡先、記録、送迎の個別日、順番、計画書の文章と添付を含みます。ネットがないときの控えです。健康情報が入るので、施設が許す場所だけに保管してください。<br>Gồm người dùng, thuốc, liên hệ, ghi chép, ngày đưa đón đã sửa, thứ tự, nội dung và tệp kế hoạch. Đây là bản dự phòng khi không có mạng. Có thông tin sức khỏe, chỉ giữ ở nơi cơ sở cho phép.</p>';
   h+='<div class="bar"><button type="button" class="btn" onclick="bkMake()">'+bi("1. バックアップを作る","1. Tạo bản sao lưu")+'</button><button type="button" class="btn o" onclick="bkCopy()">'+bi("2. コピー","2. Chép")+'</button><button type="button" class="btn o" onclick="bkDownload()">'+bi("ファイルで保存","Lưu thành tệp")+'</button><button type="button" class="btn o" onclick="bkShare()">'+bi("共有","Chia sẻ")+'</button></div>';
   h+='<textarea id="bk" placeholder="バックアップの文字がここに出ます。復元するときは全文を貼るか、JSONファイルを選んでください。 / Chữ sao lưu hiện ở đây. Để khôi phục, dán toàn bộ hoặc chọn tệp JSON."></textarea>';
   h+='<div class="filebtn btn o" style="margin-top:8px"><span>'+bi("JSONファイルを読み込む","Đọc tệp JSON")+'</span><input type="file" accept="application/json,.json,text/plain" onchange="bkFile(this)" aria-label="JSONを読み込む / Đọc JSON"></div>';
@@ -1116,7 +1689,7 @@ function settings(){
   h+='<div class="bar"><button type="button" class="btn o" onclick="setPin()">'+bi("PINを設定","Đặt PIN")+'</button>';
   if(getPin()) h+='<button type="button" class="btn o" onclick="lockNow()">'+bi("今すぐロック","Khóa ngay")+'</button><button type="button" class="btn d" onclick="clearPin()">'+bi("PINをオフ","Tắt PIN")+'</button>';
   h+='</div><div class="mut" id="pn"></div></div>';
-  h+='<p class="note">保存キーは kaigo_v1、kaigo_ord、kaigo_plan、kaigo_pin、kaigo_shownames です。ネットへの同期はありません。ファイルをダブルクリックして使えます。<br>Khóa lưu là kaigo_v1, kaigo_ord, kaigo_plan, kaigo_pin, kaigo_shownames. Không đồng bộ lên mạng. Mở được bằng cách bấm đúp tệp.</p>';
+  h+='<p class="note">保存キーは kaigo_v1、kaigo_ord、kaigo_plan、kaigo_pin、kaigo_shownames です。Bin ID とキーは kaigo_sync_bin と kaigo_sync_key にこの端末だけ保存し、バックアップファイルには入れません。<br>Khóa dữ liệu là kaigo_v1, kaigo_ord, kaigo_plan, kaigo_pin, kaigo_shownames. Bin ID và khóa nằm ở kaigo_sync_bin và kaigo_sync_key, chỉ trên máy này, không ghi vào tệp sao lưu.</p>';
   $("app").innerHTML=h;
 }
 function getPin(){try{return localStorage.getItem(PK)}catch(e){return null}}
@@ -1889,10 +2462,17 @@ function render(){
   else if(S.tab==="set") settings();
   else home();
   setNav();
+  paintSyncBanner();
 }
 document.addEventListener("input", onEdit);
 document.addEventListener("change", onEdit);
-document.addEventListener("visibilitychange", function(){ if(document.hidden && getPin()){ locked=true; render(); } });
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){
+    if(getPin()){ locked=true; render(); }
+    flushSync();
+  } else runSync("open");
+});
+window.addEventListener("pagehide", flushSync);
 
 try{ S.list=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ S.list=[]; }
 if(!Array.isArray(S.list)) S.list=[];
@@ -1905,7 +2485,9 @@ S.renDate=S.rd;
 S.logDate=S.rd;
 locked=!!getPin();
 if(!stOK()) warnSt();
+loadSyncLast();
 render();
+runSync("open");
 </script>
 </body>
 </html>
